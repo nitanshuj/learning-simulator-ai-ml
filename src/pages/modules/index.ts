@@ -1,0 +1,10 @@
+// Module exports
+export { LinearRegressionModule as default } from './LinearRegressionModule'
+export { LinearRegressionModule } from './LinearRegressionModule'
+export { GradientDescentModule } from './GradientDescentModule'
+export { LogisticRegressionModule } from './LogisticRegressionModule'
+export { KMeansModule } from './KMeansModule'
+export { TFIDFModule } from './TFIDFModule'
+export { Word2VecModule } from './Word2VecModule'
+export { BagOfWordsModule } from './BagOfWordsModule'
+export { NGramsModule } from './NGramsModule'

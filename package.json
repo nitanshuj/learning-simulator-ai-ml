@@ -14,12 +14,16 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.11.0",
+    "plotly.js": "^2.26.0",
+    "plotly.js-dist-min": "^3.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@tensorflow/tfjs": "^4.11.0",
-    "plotly.js": "^2.26.0"
+    "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
@@ -27,8 +31,6 @@
     "@typescript-eslint/parser": "^6.13.2",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "^1.0.4",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/jest-dom": "^6.1.5",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
