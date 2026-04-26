@@ -1,4 +1,3 @@
-import { Point2D } from './GradientDescent'
 
 /**
  * Logistic Regression Simulator Engine

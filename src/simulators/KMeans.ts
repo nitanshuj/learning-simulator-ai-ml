@@ -59,10 +59,8 @@ export function generateKMeansData(dataset: KMeansDataset, n = 150): { x: number
 
 export class KMeans {
   private state: KMeansState
-  private k: number
 
   constructor(rawPoints: { x: number; y: number }[], k: number) {
-    this.k = k
     // Initialize points with no cluster
     const points: KMeansPoint[] = rawPoints.map(p => ({ ...p, cluster: -1 }))
 
@@ -165,7 +163,6 @@ export class KMeans {
   }
 
   reset(rawPoints: { x: number; y: number }[], k: number) {
-    this.k = k
     const sim = new KMeans(rawPoints, k)
     this.state = sim.state
   }

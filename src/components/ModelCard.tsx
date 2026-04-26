@@ -1,8 +1,5 @@
 import React from 'react'
 import { Card } from './Card'
-import { Badge } from './Badge'
-import { Pill } from './Pill'
-import { Button } from './Button'
 import { ModelData } from '@/data/models'
 
 interface ModelCardProps {

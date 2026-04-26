@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useCallback,
 } from 'react'
-import { SimulatorState, SimulationSnapshot, Preset } from '@types/simulator'
+import type { SimulatorState, SimulationSnapshot, Preset } from '../types/simulator'
 
 interface SimulatorContextType {
   state: SimulatorState
@@ -101,16 +101,8 @@ export const SimulatorProvider: React.FC<{ children: ReactNode }> = ({
     dispatch({ type: 'SET_PARAM', payload: { paramId, value } })
   }, [])
 
-  const updateResults = useCallback((results: SimulatorState['results']) => {
-    dispatch({ type: 'UPDATE_RESULTS', payload: results })
-  }, [])
-
   const setRunning = useCallback((isRunning: boolean) => {
     dispatch({ type: 'SET_RUNNING', payload: isRunning })
-  }, [])
-
-  const setDataset = useCallback((X: number[][], y: number[]) => {
-    dispatch({ type: 'SET_DATASET', payload: { X, y } })
   }, [])
 
   const pushHistory = useCallback((snapshot: SimulationSnapshot) => {

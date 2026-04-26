@@ -4,9 +4,9 @@ import {
   Button,
   PresetButtons,
   Quiz,
-} from '@components'
-import { useSimulator } from '@hooks'
-import type { ControlItem, PresetOption, QuizQuestion } from '@components'
+} from '../components'
+import { useSimulator } from '../hooks'
+import type { ControlItem, PresetOption, QuizQuestion } from '../components'
 
 /**
  * Example simulator page demonstrating component usage and state management
@@ -196,7 +196,7 @@ export const DemoSimulatorPage: React.FC = () => {
                               {key}:
                             </span>{' '}
                             <span className="text-gray-700">
-                              {value.toFixed(3)}
+                              {typeof value === 'number' ? value.toFixed(3) : String(value)}
                             </span>
                           </div>
                         ),

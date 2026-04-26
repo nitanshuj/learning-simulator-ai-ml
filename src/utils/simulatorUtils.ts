@@ -1,4 +1,4 @@
-import { SimulatorState, SimulationSnapshot } from '@types/simulator'
+import type { SimulatorState, SimulationSnapshot } from '../types/simulator'
 
 /**
  * Create initial state for a specific module

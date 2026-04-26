@@ -34,8 +34,8 @@ describe('simulatorUtils', () => {
     current.b = 3
     expect(hasParamsChanged(prev, current)).toBe(true)
 
-    current.c = 4
-    expect(hasParamsChanged(prev, current)).toBe(true)
+    const next = { ...current, c: 4 }
+    expect(hasParamsChanged(current, next)).toBe(true)
   })
 
   it('should validate parameter bounds', () => {

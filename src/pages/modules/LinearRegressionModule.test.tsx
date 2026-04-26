@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import { LinearRegressionModule } from './LinearRegressionModule'
 
 describe('LinearRegressionModule - Integration Tests', () => {
@@ -124,7 +125,7 @@ describe('LinearRegressionModule - Integration Tests', () => {
     })
 
     it('should disable buttons while training', async () => {
-      const { container } = render(<LinearRegressionModule />)
+      render(<LinearRegressionModule />)
 
       await waitFor(() => {
         expect(screen.getByText('Train to Convergence')).toBeInTheDocument()
@@ -293,7 +294,7 @@ describe('LinearRegressionModule - Integration Tests', () => {
 
   describe('error handling', () => {
     it('should handle missing simulator gracefully', async () => {
-      const { container } = render(<LinearRegressionModule />)
+      render(<LinearRegressionModule />)
 
       // Initially should show loading message or be empty
       await waitFor(() => {

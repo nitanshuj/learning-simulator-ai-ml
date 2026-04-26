@@ -1,12 +1,11 @@
 import { useSimulator } from './useSimulator'
-import { Preset } from '@types/simulator'
-import { hasParamsChanged } from '@utils/simulatorUtils'
+import type { Preset } from '../types/simulator'
 
 /**
  * Custom hook for module-specific simulator management
  * Wraps useSimulator with module context
  */
-export const useModuleSimulator = (moduleName: string) => {
+export const useModuleSimulator = () => {
   const simulator = useSimulator()
 
   const loadPresetWithDefaults = (preset: Preset) => {

@@ -9,7 +9,6 @@ interface SliderProps {
   onChange: (value: number) => void
   unit?: string
   description?: string
-  tooltipPosition?: 'top' | 'bottom'
 }
 
 export const Slider: React.FC<SliderProps> = ({
@@ -21,7 +20,6 @@ export const Slider: React.FC<SliderProps> = ({
   onChange,
   unit = '',
   description,
-  tooltipPosition = 'top',
 }) => {
   const percentage = ((value - min) / (max - min)) * 100
 

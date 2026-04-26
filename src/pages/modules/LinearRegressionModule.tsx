@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { SimplePlot, SimpleLossChart } from '@/components'
-import { LessonCard } from '@/components'
 import { PresetButtons } from '@/components'
 import { Button } from '@/components'
 import { Card } from '@/components'
@@ -221,8 +220,6 @@ export const LinearRegressionModule: React.FC = () => {
 
   const trainData = generateLinearDataset(50, 2, 1, 1, -5, 5)
   const predictions = simulator.predict(trainData.x)
-  const trainResults = simulator.evaluateTrain()
-  const testResults = simulator.evaluateTest()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">

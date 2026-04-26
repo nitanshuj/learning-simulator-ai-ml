@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { SimulatorProvider, useSimulator } from './useSimulator'
 import { ReactNode } from 'react'
@@ -70,12 +70,6 @@ describe('useSimulator', () => {
 
   it('should update results', () => {
     const { result } = renderHook(() => useSimulator(), { wrapper })
-
-    const newResults = {
-      predictions: [1, 2, 3],
-      loss: 0.5,
-      accuracy: 0.95,
-    }
 
     // Note: updateResults is not exported from the hook in the current implementation
     // This test shows how it would work if we exposed it
