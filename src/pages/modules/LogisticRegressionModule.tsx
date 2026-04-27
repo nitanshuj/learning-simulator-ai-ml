@@ -220,21 +220,34 @@ export const LogisticRegressionModule: React.FC = () => {
         </div>
 
         {/* Multi-Class Selection */}
-        <Card title="Step 1: Choose Dataset Complexity">
-          <div className="grid grid-cols-3 gap-4">
-            {[2, 3, 4].map(n => (
-              <button
-                key={n}
-                onClick={() => handleDataChange(n)}
-                className={`py-4 rounded-2xl text-sm font-black border-2 transition-all ${
-                  numClasses === n 
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xl shadow-indigo-100' 
-                  : 'bg-white text-gray-600 border-gray-100 hover:border-indigo-300'
-                }`}
-              >
-                {n === 2 ? 'Binary (Sigmoid)' : `${n} Classes (Softmax)`}
-              </button>
-            ))}
+        <Card title="Step 1: Data Setup">
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-bold text-gray-700 uppercase tracking-tight block mb-3">Number of Classes</label>
+              <div className="grid grid-cols-3 gap-3">
+                {[2, 3, 4].map(n => (
+                  <button
+                    key={n}
+                    onClick={() => handleDataChange(n)}
+                    className={`py-3 rounded-xl text-sm font-black border-2 transition-all ${
+                      numClasses === n
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
+                    }`}
+                  >
+                    {n} Classes
+                  </button>
+                ))}
+              </div>
+            </div>
+            <Button
+              onClick={() => handleDataChange(numClasses)}
+              variant="outline"
+              size="sm"
+              className="w-full mt-4 border-dashed border-2 hover:border-indigo-500 hover:text-indigo-600 transition-all"
+            >
+              🔄 Regenerate Current Data
+            </Button>
           </div>
         </Card>
 

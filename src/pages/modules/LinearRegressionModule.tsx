@@ -203,16 +203,14 @@ export const LinearRegressionModule: React.FC = () => {
     }, 0)
   }
 
-  // Reset simulator
   const handleReset = () => {
     if (!simulator) return
-
-    simulator.reset()
+    simulator.setParams({ slope: 1, intercept: 0 })
     setSlope(1)
     setIntercept(0)
     setRegType('none')
     setLambda(0.1)
-
+    setSelectedPreset(undefined)
     const trainResults = simulator.evaluateTrain()
     setState({
       params: simulator.getParams(),
@@ -221,6 +219,15 @@ export const LinearRegressionModule: React.FC = () => {
       iterations: 0,
       history: [],
     })
+  }
+
+  const handleRegenerateData = () => {
+    if (!simulator) return
+    const data = generateLinearDataset(50, 2, 1, 1, -5, 5)
+    simulator.setTrainData(data.x, data.y)
+    const testData = generateLinearDataset(20, 2, 1, 0.8, -5, 5)
+    simulator.setTestData(testData.x, testData.y)
+    handleReset()
   }
 
   // Apply preset
@@ -252,8 +259,8 @@ export const LinearRegressionModule: React.FC = () => {
     return <div className="text-center py-8">Loading simulator...</div>
   }
 
-  const trainData = generateLinearDataset(50, 2, 1, 1, -5, 5)
-  const predictions = simulator.predict(trainData.x)
+  const { x, y } = simulator.getTrainData()
+  const predictions = simulator.predict(x)
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
@@ -313,8 +320,8 @@ export const LinearRegressionModule: React.FC = () => {
             <Card title="Data & Fitted Line" className="h-full">
               <SimplePlot
                 title=""
-                xData={trainData.x}
-                yData={trainData.y}
+                xData={x}
+                yData={y}
                 predictions={predictions}
                 loss={state.trainLoss}
                 r2={state.trainR2}
@@ -519,6 +526,15 @@ export const LinearRegressionModule: React.FC = () => {
               size="md"
             >
               Reset
+            </Button>
+            <Button
+              onClick={handleRegenerateData}
+              disabled={isRunning}
+              variant="outline"
+              size="md"
+              className="border-dashed"
+            >
+              🔄 Regenerate Data
             </Button>
             <div className="ml-auto text-sm">
               Status: <span className={isRunning ? 'text-blue-600 font-semibold' : 'text-gray-600'}>

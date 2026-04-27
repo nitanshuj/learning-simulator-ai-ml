@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import Plotly from 'plotly.js-dist-min'
-import { HierarchicalClustering, HierarchicalState, LinkageMethod } from '@/simulators/HierarchicalClustering'
+import { HierarchicalClustering, HierarchicalState, LinkageMethod } from '@/simulators'
 import { Dendrogram } from '@/components/Dendrogram'
 
 export const HierarchicalClusteringModule: React.FC = () => {
@@ -159,21 +159,31 @@ export const HierarchicalClusteringModule: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 block mb-2">Change Dataset</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {['blobs', 'moons', 'rings'].map(ds => (
-                        <Button 
+                    <label className="text-sm font-semibold text-gray-700 block mb-2">Dataset</label>
+                    <div className="space-y-2">
+                      {['blobs', 'circles', 'moons'].map((ds) => (
+                        <button
                           key={ds}
                           onClick={() => handleDatasetChange(ds)}
-                          variant={datasetName === ds ? 'primary' : 'outline'}
-                          size="sm"
-                          className="capitalize"
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                            datasetName === ds
+                              ? 'bg-amber-100 text-amber-700 border border-amber-300'
+                              : 'hover:bg-slate-100 text-gray-600'
+                          }`}
                         >
                           {ds}
-                        </Button>
+                        </button>
                       ))}
                     </div>
                   </div>
+                  <Button
+                    onClick={() => handleDatasetChange(datasetName)}
+                    variant="outline"
+                    size="sm"
+                    className="w-full mt-2 border-dashed border-2 hover:border-amber-500 hover:text-amber-600 transition-all"
+                  >
+                    🔄 Regenerate Current Data
+                  </Button>
                 </div>
               </Card>
             </div>

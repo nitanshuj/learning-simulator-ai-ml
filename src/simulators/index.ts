@@ -61,4 +61,30 @@ export type { DecisionTreeNode, DecisionTreeParams, DecisionTreeState } from './
 export { RandomForest } from './RandomForest'
 export type { RandomForestParams, RandomForestState } from './RandomForest'
 
+// SVM
+export { SVM } from './SVM'
+export type { SVMState, SVMKernel } from './SVM'
+
+// K-NN
+export { KNN } from './KNN'
+export type { KNNState, DistanceMetric } from './KNN'
+
+// Naive Bayes
+export { NaiveBayes } from './NaiveBayes'
+export type { NaiveBayesState } from './NaiveBayes'
+
+// Hierarchical Clustering
+export { HierarchicalClustering } from './HierarchicalClustering'
+export type { HierarchicalState, LinkageMethod } from './HierarchicalClustering'
+
+// Boosting
+export { XGBoost } from './XGBoost'
+export { AdaBoost } from './AdaBoost'
+export { CatBoost } from './CatBoost'
+export type { BoostingState } from './shared/types'
+
+// PCA
+export { PCA, generatePCAData } from './PCA'
+export type { PCAState } from './PCA'
+
 

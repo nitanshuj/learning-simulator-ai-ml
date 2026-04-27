@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import { ClassificationPlot } from '@/components/ClassificationPlot'
-import { SVM, SVMState, SVMKernel } from '@/simulators/SVM'
+import { SVM, SVMState, SVMKernel } from '@/simulators'
 
 export const SVMModule: React.FC = () => {
   const simulator = useMemo(() => new SVM('circles', 'rbf', 1.0), [])
@@ -201,19 +201,29 @@ export const SVMModule: React.FC = () => {
               </Card>
 
               <Card title="Dataset">
-                <div className="grid grid-cols-2 gap-2">
-                  {['linear', 'blobs', 'moons', 'circles'].map(ds => (
-                    <Button 
+                <div className="space-y-2">
+                  {['circles', 'moons', 'blobs'].map((ds) => (
+                    <button
                       key={ds}
                       onClick={() => handleDatasetChange(ds)}
-                      variant={datasetName === ds ? 'primary' : 'outline'}
-                      size="sm"
-                      className="capitalize"
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                        datasetName === ds
+                          ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
+                          : 'hover:bg-slate-100 text-gray-600'
+                      }`}
                     >
                       {ds}
-                    </Button>
+                    </button>
                   ))}
                 </div>
+                <Button
+                  onClick={() => handleDatasetChange(datasetName)}
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-3 border-dashed border-2 hover:border-indigo-500 hover:text-indigo-600 transition-all"
+                >
+                  🔄 Regenerate Current Data
+                </Button>
               </Card>
 
               <div className="text-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">

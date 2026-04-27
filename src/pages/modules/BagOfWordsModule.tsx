@@ -120,6 +120,17 @@ export const BagOfWordsModule: React.FC = () => {
                     onChange={(e) => setDocsInput(e.target.value)}
                   />
                   <Button onClick={handleApply} variant="primary" className="w-full">Process Text</Button>
+                  <Button 
+                    onClick={() => {
+                      setDocsInput(DEFAULT_DOCS.join('\n'));
+                      sim.setDocuments(DEFAULT_DOCS);
+                      setState(sim.getState());
+                    }} 
+                    variant="outline" 
+                    className="w-full border-dashed"
+                  >
+                    🔄 Reset to Defaults
+                  </Button>
                 </div>
               </Card>
 

@@ -147,24 +147,32 @@ export const KMeansModule: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Dataset */}
+                  {/* Dataset Selector */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Dataset Type</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {(['blobs', 'moons', 'rings', 'random'] as KMeansDataset[]).map(d => (
+                    <label className="text-sm font-semibold text-gray-700 block mb-2">Dataset</label>
+                    <div className="space-y-2">
+                      {(['blobs', 'circles', 'moons'] as KMeansDataset[]).map((ds) => (
                         <button
-                          key={d}
-                          onClick={() => handleDatasetChange(d)}
-                          className={`py-2 rounded-lg text-xs font-bold capitalize border transition-all ${
-                            dataset === d
-                              ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                              : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                          key={ds}
+                          onClick={() => handleDatasetChange(ds)}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                            dataset === ds
+                              ? 'bg-amber-100 text-amber-700 border border-amber-300'
+                              : 'hover:bg-slate-100 text-gray-600'
                           }`}
                         >
-                          {d === 'blobs' ? '🫧 Blobs' : d === 'moons' ? '🌙 Moons' : d === 'rings' ? '💍 Rings' : '🎲 Random'}
+                          {ds}
                         </button>
                       ))}
                     </div>
+                    <Button
+                      onClick={() => handleDatasetChange(dataset)}
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-2 border-dashed border-2 hover:border-amber-500 hover:text-amber-600 transition-all"
+                    >
+                      🔄 Regenerate Current Data
+                    </Button>
                   </div>
 
                   {/* Action Buttons */}

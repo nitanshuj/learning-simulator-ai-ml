@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import { ClassificationPlot } from '@/components/ClassificationPlot'
-import { NaiveBayes, NaiveBayesState } from '@/simulators/NaiveBayes'
+import { NaiveBayes, NaiveBayesState } from '@/simulators'
 
 export const NaiveBayesModule: React.FC = () => {
   const simulator = useMemo(() => new NaiveBayes('blobs'), [])
@@ -93,20 +93,30 @@ export const NaiveBayesModule: React.FC = () => {
             </div>
 
             <div className="space-y-6">
-              <Card title="Dataset Selection">
-                <div className="grid grid-cols-2 gap-2">
-                  {['blobs', 'linear', 'moons', 'circles'].map(ds => (
-                    <Button 
+              <Card title="Dataset">
+                <div className="space-y-2">
+                  {['blobs', 'circles', 'moons'].map((ds) => (
+                    <button
                       key={ds}
                       onClick={() => handleDatasetChange(ds)}
-                      variant={datasetName === ds ? 'primary' : 'outline'}
-                      size="sm"
-                      className="capitalize"
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                        datasetName === ds
+                          ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                          : 'hover:bg-slate-100 text-gray-600'
+                      }`}
                     >
                       {ds}
-                    </Button>
+                    </button>
                   ))}
                 </div>
+                <Button
+                  onClick={() => handleDatasetChange(datasetName)}
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-3 border-dashed border-2 hover:border-blue-500 hover:text-blue-600 transition-all"
+                >
+                  🔄 Regenerate Current Data
+                </Button>
               </Card>
 
               <Card title="Why use Naive Bayes?">

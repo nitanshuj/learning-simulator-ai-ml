@@ -130,6 +130,10 @@ export const HomePage: React.FC = () => {
                       'knn': '/knn',
                       'naive-bayes': '/naive-bayes',
                       'hierarchical-clustering': '/hierarchical-clustering',
+                      'xgboost': '/xgboost',
+                      'adaboost': '/adaboost',
+                      'catboost': '/catboost',
+                      'pca': '/modules/pca',
                     }
                     if (routes[id]) navigate(routes[id])
                   }}

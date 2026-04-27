@@ -93,7 +93,7 @@ export const models: ModelData[] = [
     keyConcepts: ["Boosting", "Regularization", "Trees"],
     icon: "🚀",
     color: "orange",
-    status: "Coming Soon"
+    status: "Active"
   },
   {
     id: "adaboost",
@@ -103,9 +103,9 @@ export const models: ModelData[] = [
     difficulty: "Intermediate",
     estimatedTime: "20 minutes",
     keyConcepts: ["Weak Learners", "Weighting", "Ensemble"],
-    icon: "🪄",
-    color: "amber",
-    status: "Coming Soon"
+    icon: "📈",
+    color: "red",
+    status: "Active"
   },
   {
     id: "catboost",
@@ -116,8 +116,8 @@ export const models: ModelData[] = [
     estimatedTime: "25 minutes",
     keyConcepts: ["Categorical", "Symmetric Trees", "Ordered Boosting"],
     icon: "🐱",
-    color: "yellow",
-    status: "Coming Soon"
+    color: "purple",
+    status: "Active"
   },
   {
     id: "svm",
@@ -189,7 +189,7 @@ export const models: ModelData[] = [
     keyConcepts: ["Eigenvectors", "Variance", "Components"],
     icon: "📉",
     color: "indigo",
-    status: "Coming Soon"
+    status: "Active"
   },
   {
     id: "bag-of-words",

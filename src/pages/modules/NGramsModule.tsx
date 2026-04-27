@@ -142,6 +142,19 @@ export const NGramsModule: React.FC = () => {
                   </div>
 
                   <Button onClick={handleApply} variant="primary" className="w-full">Update Sequences</Button>
+                  <Button 
+                    onClick={() => {
+                      setDocInput(DEFAULT_DOC);
+                      setNInput(2);
+                      sim.setDocument(DEFAULT_DOC);
+                      sim.setN(2);
+                      setState(sim.getState());
+                    }} 
+                    variant="outline" 
+                    className="w-full border-dashed"
+                  >
+                    🔄 Reset to Defaults
+                  </Button>
                 </div>
               </Card>
 

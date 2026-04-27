@@ -15,6 +15,10 @@ import {
   KNNModule,
   NaiveBayesModule,
   HierarchicalClusteringModule,
+  XGBoostModule,
+  AdaBoostModule,
+  CatBoostModule,
+  PCAModule,
 } from '@/pages/modules'
 
 function App() {
@@ -36,6 +40,10 @@ function App() {
         <Route path="/knn" element={<KNNModule />} />
         <Route path="/naive-bayes" element={<NaiveBayesModule />} />
         <Route path="/hierarchical-clustering" element={<HierarchicalClusteringModule />} />
+        <Route path="/xgboost" element={<XGBoostModule />} />
+        <Route path="/adaboost" element={<AdaBoostModule />} />
+        <Route path="/catboost" element={<CatBoostModule />} />
+        <Route path="/modules/pca" element={<PCAModule />} />
       </Routes>
     </BrowserRouter>
   )
