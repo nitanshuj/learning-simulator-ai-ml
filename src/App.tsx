@@ -9,6 +9,8 @@ import {
   Word2VecModule,
   BagOfWordsModule,
   NGramsModule,
+  DecisionTreeModule,
+  RandomForestModule,
 } from '@/pages/modules'
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
         <Route path="/word2vec" element={<Word2VecModule />} />
         <Route path="/bag-of-words" element={<BagOfWordsModule />} />
         <Route path="/n-grams" element={<NGramsModule />} />
+        <Route path="/decision-tree" element={<DecisionTreeModule />} />
+        <Route path="/random-forest" element={<RandomForestModule />} />
       </Routes>
     </BrowserRouter>
   )

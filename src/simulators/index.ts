@@ -52,3 +52,13 @@ export type { BagOfWordsState, Document as BoWDocument } from './BagOfWords'
 export { NGramsSimulator } from './NGrams'
 export type { NGramsState, NGram } from './NGrams'
 
+// Decision Tree
+export { DecisionTree, generateMultiClassData } from './DecisionTree'
+export type { DecisionTreeNode, DecisionTreeParams, DecisionTreeState } from './DecisionTree'
+
+
+// Random Forest
+export { RandomForest } from './RandomForest'
+export type { RandomForestParams, RandomForestState } from './RandomForest'
+
+

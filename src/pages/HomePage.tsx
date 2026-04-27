@@ -131,6 +131,8 @@ export const HomePage: React.FC = () => {
                       'word2vec': '/word2vec',
                       'bag-of-words': '/bag-of-words',
                       'n-grams': '/n-grams',
+                      'decision-tree': '/decision-tree',
+                      'random-forest': '/random-forest',
                     }
                     if (routes[id]) navigate(routes[id])
                   }}

@@ -71,7 +71,7 @@ export const models: ModelData[] = [
     keyConcepts: ["Entropy", "Information Gain", "Splits"],
     icon: "🌳",
     color: "emerald",
-    status: "Coming Soon"
+    status: "Active"
   },
   {
     id: "svm",
@@ -143,7 +143,7 @@ export const models: ModelData[] = [
     keyConcepts: ["Ensemble", "Bagging", "Voters"],
     icon: "🌲",
     color: "emerald",
-    status: "Coming Soon"
+    status: "Active"
   },
   {
     id: "tf-idf",
