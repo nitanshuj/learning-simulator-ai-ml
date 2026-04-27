@@ -11,6 +11,10 @@ import {
   NGramsModule,
   DecisionTreeModule,
   RandomForestModule,
+  SVMModule,
+  KNNModule,
+  NaiveBayesModule,
+  HierarchicalClusteringModule,
 } from '@/pages/modules'
 
 function App() {
@@ -28,6 +32,10 @@ function App() {
         <Route path="/n-grams" element={<NGramsModule />} />
         <Route path="/decision-tree" element={<DecisionTreeModule />} />
         <Route path="/random-forest" element={<RandomForestModule />} />
+        <Route path="/svm" element={<SVMModule />} />
+        <Route path="/knn" element={<KNNModule />} />
+        <Route path="/naive-bayes" element={<NaiveBayesModule />} />
+        <Route path="/hierarchical-clustering" element={<HierarchicalClusteringModule />} />
       </Routes>
     </BrowserRouter>
   )

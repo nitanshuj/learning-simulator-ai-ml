@@ -11,6 +11,8 @@ import { generateLinearDataset } from './shared/datasets'
 export interface LinearRegressionParams {
   slope: number
   intercept: number
+  regType: 'none' | 'l1' | 'l2'
+  lambda: number
 }
 
 export interface LinearRegressionResults {
@@ -71,10 +73,14 @@ export class LinearRegression {
     slopeBounds?: [number, number]
     interceptBounds?: [number, number]
     learningRate?: number
+    regType?: 'none' | 'l1' | 'l2'
+    lambda?: number
   }) {
     this.params = {
       slope: config?.initialSlope ?? 1,
       intercept: config?.initialIntercept ?? 0,
+      regType: config?.regType ?? 'none',
+      lambda: config?.lambda ?? 0.1,
     }
 
     this.slopeBounds = config?.slopeBounds ?? [-10, 10]
@@ -165,11 +171,18 @@ export class LinearRegression {
     const predictions = this.predict(this.trainX)
 
     // Calculate gradients
-    const { slopeGradient, interceptGradient } = calculateGradientsLinearMSE(
+    let { slopeGradient, interceptGradient } = calculateGradientsLinearMSE(
       this.trainX,
       this.trainY,
       predictions,
     )
+
+    // Apply Regularization to slope (usually intercept is not regularized)
+    if (this.params.regType === 'l1') {
+      slopeGradient += this.params.lambda * Math.sign(this.params.slope)
+    } else if (this.params.regType === 'l2') {
+      slopeGradient += this.params.lambda * this.params.slope
+    }
 
     // Update parameters
     this.params.slope = gradientDescentStep(
@@ -266,6 +279,8 @@ export class LinearRegression {
     this.params = {
       slope: 1,
       intercept: 0,
+      regType: 'none',
+      lambda: 0.1,
     }
     this.history = []
     this.iterations = 0

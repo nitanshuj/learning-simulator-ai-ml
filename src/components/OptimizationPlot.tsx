@@ -116,7 +116,8 @@ export const OptimizationPlot: React.FC<OptimizationPlotProps> = ({
       legend: {
         orientation: 'h',
         y: -0.1
-      }
+      },
+      uirevision: functionType // Preserves UI state (like camera) unless function changes
     }
 
     if (viewMode === '3d') {
@@ -124,6 +125,7 @@ export const OptimizationPlot: React.FC<OptimizationPlotProps> = ({
         xaxis: { title: 'X', range: xRange },
         yaxis: { title: 'Y', range: yRange },
         zaxis: { title: 'Cost' },
+        // Only set default camera if we don't have uirevision handling it
         camera: {
           eye: { x: 1.5, y: 1.5, z: 1.5 }
         }
@@ -139,12 +141,11 @@ export const OptimizationPlot: React.FC<OptimizationPlotProps> = ({
       displaylogo: false
     }
 
-    Plotly.newPlot(plotRef.current, traces, layout, config)
+    Plotly.react(plotRef.current, traces, layout, config)
 
     return () => {
-      if (plotRef.current) {
-        Plotly.purge(plotRef.current)
-      }
+      // We don't purge here because it would reset the camera on every state update.
+      // Plotly.react handles updating the existing plot efficiently.
     }
   }, [currentPoint, path, functionType, viewMode, title, calculateCost])
 

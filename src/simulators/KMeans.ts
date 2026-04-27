@@ -15,6 +15,7 @@ export interface KMeansState {
   centroids: KMeansCentroid[]
   iteration: number
   inertia: number
+  silhouetteScore: number | null
   converged: boolean
   phase: 'assign' | 'update' | 'done'
 }
@@ -90,6 +91,7 @@ export class KMeans {
       centroids,
       iteration: 0,
       inertia: Infinity,
+      silhouetteScore: null,
       converged: false,
       phase: 'assign',
     }
@@ -101,6 +103,7 @@ export class KMeans {
       centroids: this.state.centroids.map(c => ({ ...c })),
       iteration: this.state.iteration,
       inertia: this.state.inertia,
+      silhouetteScore: this.state.silhouetteScore,
       converged: this.state.converged,
       phase: this.state.phase,
     }
@@ -134,6 +137,47 @@ export class KMeans {
       if (!c) return sum
       return sum + (p.x - c.x) ** 2 + (p.y - c.y) ** 2
     }, 0)
+
+    // Calculate Silhouette Score
+    this.state.silhouetteScore = this.calculateSilhouette()
+  }
+
+  private calculateSilhouette(): number | null {
+    const points = this.state.points
+    if (points.some(p => p.cluster === -1)) return null
+    
+    const clusters = Array.from(new Set(points.map(p => p.cluster)))
+    if (clusters.length < 2) return 0
+
+    let totalS = 0
+    let validPoints = 0
+
+    for (let i = 0; i < points.length; i++) {
+      const p1 = points[i]
+      const sameCluster = points.filter((p, idx) => p.cluster === p1.cluster && idx !== i)
+      
+      if (sameCluster.length === 0) continue
+
+      // a(i): average distance to points in same cluster
+      const a_i = sameCluster.reduce((sum, p2) => 
+        sum + Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2), 0) / sameCluster.length
+
+      // b(i): min average distance to points in any other cluster
+      let min_b_i = Infinity
+      for (const cID of clusters) {
+        if (cID === p1.cluster) continue
+        const otherCluster = points.filter(p => p.cluster === cID)
+        const avgDist = otherCluster.reduce((sum, p2) => 
+          sum + Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2), 0) / otherCluster.length
+        if (avgDist < min_b_i) min_b_i = avgDist
+      }
+
+      const s_i = (min_b_i - a_i) / Math.max(a_i, min_b_i)
+      totalS += s_i
+      validPoints++
+    }
+
+    return validPoints > 0 ? totalS / validPoints : 0
   }
 
   step(): KMeansState {

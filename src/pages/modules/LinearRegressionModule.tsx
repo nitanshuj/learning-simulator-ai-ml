@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { SimplePlot, SimpleLossChart } from '@/components'
-import { PresetButtons } from '@/components'
-import { Button } from '@/components'
-import { Card } from '@/components'
-import { Quiz } from '@/components'
+import { 
+  SimplePlot, 
+  SimpleLossChart, 
+  PresetButtons, 
+  Button, 
+  Card, 
+  Quiz, 
+  Navbar, 
+  Footer, 
+  BackButton,
+  Sidebar
+} from '@/components'
 import {
   LinearRegression,
   LINEAR_REGRESSION_PRESETS,
@@ -23,6 +30,8 @@ export const LinearRegressionModule: React.FC = () => {
   const [learningRate, setLearningRate] = useState(0.01)
   const [slope, setSlope] = useState(1)
   const [intercept, setIntercept] = useState(0)
+  const [regType, setRegType] = useState<'none' | 'l1' | 'l2'>('none')
+  const [lambda, setLambda] = useState(0.1)
   const [selectedPreset, setSelectedPreset] = useState<string | undefined>()
 
   // Initialize simulator
@@ -93,6 +102,29 @@ export const LinearRegressionModule: React.FC = () => {
 
   const handleLearningRateChange = (value: number) => {
     setLearningRate(value)
+    if (simulator) {
+      // Re-initialize or update simulator config if needed
+    }
+  }
+
+  // Unified parameter update
+  const handleParamUpdate = (updates: any) => {
+    if (!simulator) return
+
+    if (updates.slope !== undefined) setSlope(updates.slope)
+    if (updates.intercept !== undefined) setIntercept(updates.intercept)
+    if (updates.regType !== undefined) setRegType(updates.regType)
+    if (updates.lambda !== undefined) setLambda(updates.lambda)
+
+    simulator.setParams(updates)
+    
+    const trainResults = simulator.evaluateTrain()
+    setState((prev) => prev ? {
+      ...prev,
+      params: simulator.getParams(),
+      trainLoss: trainResults.loss,
+      trainR2: trainResults.r2,
+    } : null)
   }
 
   // Single gradient descent step
@@ -178,6 +210,8 @@ export const LinearRegressionModule: React.FC = () => {
     simulator.reset()
     setSlope(1)
     setIntercept(0)
+    setRegType('none')
+    setLambda(0.1)
 
     const trainResults = simulator.evaluateTrain()
     setState({
@@ -222,8 +256,12 @@ export const LinearRegressionModule: React.FC = () => {
   const predictions = simulator.predict(trainData.x)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-50 font-sans">
+      <Navbar />
+      <Sidebar />
+      <div className="lg:pl-72 pt-16">
+        <div className="max-w-6xl mx-auto space-y-8 p-6 lg:p-10">
+          <BackButton />
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
@@ -394,6 +432,45 @@ export const LinearRegressionModule: React.FC = () => {
             </Card>
           </div>
         </div>
+
+        {/* Regularization Options (Like Logistic Regression) */}
+        <Card title="Regularization (L1 / L2)">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+            <div className="md:col-span-2 flex gap-3">
+              {(['none', 'l1', 'l2'] as const).map(type => (
+                <button
+                  key={type}
+                  onClick={() => handleParamUpdate({ regType: type })}
+                  className={`flex-1 py-3 rounded-xl text-xs font-black border-2 transition-all uppercase tracking-widest ${
+                    regType === type 
+                    ? 'bg-gray-900 text-white border-gray-900 shadow-lg shadow-gray-200' 
+                    : 'bg-white text-gray-500 border-gray-100 hover:bg-gray-50'
+                  }`}
+                >
+                  {type === 'none' ? 'No Penalty' : type === 'l1' ? 'L1 (Lasso)' : 'L2 (Ridge)'}
+                </button>
+              ))}
+            </div>
+            
+            <div className="md:col-span-2">
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                  Penalty Strength (λ)
+                </label>
+                <span className="text-sm font-black text-indigo-600">{lambda.toFixed(3)}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={lambda}
+                onChange={(e) => handleParamUpdate({ lambda: parseFloat(e.target.value) })}
+                className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+              />
+            </div>
+          </div>
+        </Card>
 
         {/* Presets */}
         <Card title="Try Preset Scenarios">
@@ -632,7 +709,9 @@ export const LinearRegressionModule: React.FC = () => {
             Watch the loss decrease as you optimize the parameters!
           </p>
         </div>
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }

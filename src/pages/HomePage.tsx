@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
@@ -14,8 +15,8 @@ export const HomePage: React.FC = () => {
     'All Models', 
     'Supervised Learning', 
     'Unsupervised Learning', 
-    'Classification', 
     'Regression', 
+    'Classification', 
     'Clustering', 
     'Dimensionality Reduction',
     'NLP'
@@ -25,19 +26,11 @@ export const HomePage: React.FC = () => {
     const matchesSearch = model.title.toLowerCase().includes(searchQuery.toLowerCase())
     if (activeFilter === 'All Models') return matchesSearch
     
-    // Simple mapping for demo
-    if (activeFilter === 'Supervised Learning') {
-      return matchesSearch && (model.category === 'Regression' || model.category === 'Classification')
-    }
-    if (activeFilter === 'Unsupervised Learning') {
-      return matchesSearch && (model.category === 'Clustering' || model.category === 'Dimensionality Reduction')
-    }
-    
-    return matchesSearch && model.category === activeFilter
+    return matchesSearch && (model.categories as any).includes(activeFilter)
   })
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] font-sans pb-20">
+    <div className="min-h-screen bg-[#fafbfc] font-sans">
       <Navbar />
       
       <main>
@@ -63,30 +56,30 @@ export const HomePage: React.FC = () => {
           </div>
 
           <div className="container-wide text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-800 mb-6">
-              Learn Machine Learning <span className="font-hand text-blue-600 relative">Visually
+            <h1 className="text-5xl md:text-6xl font-bold text-slate-800 mb-6 tracking-tight">
+              Learn Machine Learning <span className="font-hand text-blue-600 relative inline-block">Visually
                 <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 100 8" preserveAspectRatio="none">
                   <path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
             </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-10">
-              Explore ML models with simple explanations and interactive visualizations.
+            <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+              Explore ML models with simple explanations and interactive simulations.
             </p>
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto relative group">
-              <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                <svg className="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
               <input 
                 type="text" 
-                placeholder="Search models..."
+                placeholder="Search models or concepts..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-16 pl-14 pr-6 bg-white border border-divider rounded-full text-lg shadow-sm focus:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+                className="w-full h-16 pl-14 pr-6 bg-white border border-slate-200 rounded-2xl text-lg shadow-sm group-hover:shadow-md focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:text-slate-300"
               />
             </div>
           </div>
@@ -95,15 +88,15 @@ export const HomePage: React.FC = () => {
         {/* Filters */}
         <section className="pb-12">
           <div className="container-wide">
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-2">
               {filters.map(filter => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all border ${
+                  className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                     activeFilter === filter 
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
-                      : 'bg-white text-slate-500 border-divider hover:border-blue-200 hover:text-blue-600'
+                      ? 'bg-slate-900 text-white shadow-xl shadow-slate-200' 
+                      : 'bg-white text-slate-500 border border-slate-100 hover:border-blue-200 hover:text-blue-600'
                   }`}
                 >
                   {filter}
@@ -116,7 +109,7 @@ export const HomePage: React.FC = () => {
         {/* Model Grid */}
         <section className="pb-24">
           <div className="container-wide">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredModels.map(model => (
                 <ModelCard 
                   key={model.id} 
@@ -133,6 +126,10 @@ export const HomePage: React.FC = () => {
                       'n-grams': '/n-grams',
                       'decision-tree': '/decision-tree',
                       'random-forest': '/random-forest',
+                      'svm': '/svm',
+                      'knn': '/knn',
+                      'naive-bayes': '/naive-bayes',
+                      'hierarchical-clustering': '/hierarchical-clustering',
                     }
                     if (routes[id]) navigate(routes[id])
                   }}
@@ -149,8 +146,8 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* Bottom Banner */}
-        <section className="container-wide">
-          <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex items-center justify-center space-x-3 text-indigo-700">
+        <section className="container-wide mb-20">
+          <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl flex items-center justify-center space-x-3 text-indigo-700">
             <span className="text-xl">🚀</span>
             <span className="font-bold text-sm">More models coming soon! Stay tuned and keep learning.</span>
           </div>

@@ -1,6 +1,7 @@
+
 import React from 'react'
 import { Card } from './Card'
-import { ModelData } from '@/data/models'
+import { ModelData, Category } from '@/data/models'
 
 interface ModelCardProps {
   model: ModelData
@@ -9,50 +10,68 @@ interface ModelCardProps {
 }
 
 export const ModelCard: React.FC<ModelCardProps> = ({ model, onClick }) => {
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (category: Category) => {
     switch (category) {
       case 'Regression': return 'bg-blue-50 text-blue-600'
       case 'Classification': return 'bg-emerald-50 text-emerald-600'
       case 'Clustering': return 'bg-amber-50 text-amber-600'
       case 'Dimensionality Reduction': return 'bg-indigo-50 text-indigo-600'
+      case 'Supervised Learning': return 'bg-slate-100 text-slate-600'
+      case 'Unsupervised Learning': return 'bg-slate-100 text-slate-600'
+      case 'NLP': return 'bg-purple-50 text-purple-600'
       default: return 'bg-slate-50 text-slate-600'
     }
   }
 
-  const categoryStyle = getCategoryColor(model.category)
+  const isComingSoon = model.status === 'Coming Soon'
 
   return (
-    <Card 
-      hover 
-      className="h-full flex flex-col p-0 overflow-hidden group cursor-pointer"
-      onClick={() => model.status !== 'Coming Soon' && onClick?.(model.id)}
+    <Card
+      hover
+      className={`group cursor-pointer p-0 overflow-hidden border-slate-100 sm:h-52 ${isComingSoon ? 'opacity-75' : ''}`}
+      onClick={() => !isComingSoon && onClick?.(model.id)}
     >
-      {/* Illustration Area */}
-      <div className={`h-32 flex items-center justify-center ${categoryStyle.split(' ')[0]} border-b border-divider relative`}>
-        <div className="text-5xl transform group-hover:scale-110 transition-transform duration-300">
-          {model.icon}
+      <div className="flex flex-col sm:flex-row h-full">
+        {/* Icon Section - Left side on desktop */}
+        <div className={`w-full sm:w-32 flex items-center justify-center bg-slate-50/50 border-b sm:border-b-0 sm:border-r border-slate-100 relative group-hover:bg-white transition-colors duration-300 min-h-[120px]`}>
+          <div className="text-4xl transform group-hover:scale-110 transition-transform duration-300 z-10">
+            {model.icon}
+          </div>
+          {/* Subtle patterns */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+            <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full border border-current" />
+            <div className="absolute -bottom-6 -right-6 w-20 h-20 rounded-full border-2 border-current" />
+          </div>
         </div>
-        {/* Simple doodle-like background elements */}
-        <div className="absolute top-2 left-2 w-4 h-4 rounded-full border border-current opacity-20" />
-        <div className="absolute bottom-4 right-6 w-8 h-8 rounded-full border-2 border-current opacity-10" />
-        <div className="absolute top-4 right-4 w-6 h-1 bg-current opacity-10 rounded-full rotate-45" />
-      </div>
-      
-      <div className="p-xl space-y-md flex-1 flex flex-col">
-        <h4 className="text-h4 font-bold text-slate-800">{model.title}</h4>
-        <p className="text-sm text-slate-600 leading-relaxed flex-1">
-          {model.description}
-        </p>
-        
-        <div className="pt-md flex items-center justify-between">
-          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded ${categoryStyle}`}>
-            {model.category}
-          </span>
-          {model.status === 'Coming Soon' && (
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider italic">
-              Coming Soon
-            </span>
-          )}
+
+        {/* Content Section - Right side */}
+        <div className="flex-1 p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-start mb-2">
+              <h4 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-2">
+                {model.title}
+              </h4>
+              {isComingSoon && (
+                <span className="text-[9px] font-black bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded uppercase tracking-tighter">
+                  Coming Soon
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-slate-500 leading-snug line-clamp-2 mb-3">
+              {model.description}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-1.5 mt-auto">
+            {model.categories.map((cat) => (
+              <span
+                key={cat}
+                className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${getCategoryColor(cat)}`}
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </Card>

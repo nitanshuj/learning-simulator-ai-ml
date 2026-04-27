@@ -16,32 +16,57 @@ export const Word2VecPlot: React.FC<Word2VecPlotProps> = ({ embeddings, selected
 
     const traces: any[] = []
 
-    // Background unselected words
-    const unselected = embeddings.filter(e => !selectedWords.includes(e.word))
-    if (unselected.length > 0) {
-      traces.push({
-        x: unselected.map(e => e.x),
-        y: unselected.map(e => e.y),
-        text: unselected.map(e => e.word),
-        mode: 'markers+text',
-        textposition: 'top center',
-        type: 'scatter',
-        marker: { size: 8, color: '#94a3b8', opacity: 0.5 },
-        hoverinfo: 'text'
-      })
+    // Colors per category
+    const CATEGORY_COLORS: Record<string, string> = {
+      Royalty: '#a855f7', // Purple
+      People: '#3b82f6',   // Blue
+      Fruit: '#f59e0b',    // Amber
+      Transport: '#10b981' // Emerald
     }
 
-    // Selected words
+    // Background unselected words - grouped by category for consistent coloring
+    const categories = Array.from(new Set(embeddings.map(e => e.category)))
+    const unselected = embeddings.filter(e => !selectedWords.includes(e.word))
+
+    categories.forEach(cat => {
+      const catWords = unselected.filter(e => e.category === cat)
+      if (catWords.length > 0) {
+        traces.push({
+          x: catWords.map(e => e.x),
+          y: catWords.map(e => e.y),
+          text: catWords.map(e => e.word),
+          name: cat,
+          mode: 'markers+text',
+          textposition: 'top center',
+          type: 'scatter',
+          marker: { 
+            size: 10, 
+            color: CATEGORY_COLORS[cat] || '#94a3b8', 
+            opacity: 0.6,
+            line: { color: 'white', width: 1 }
+          },
+          hoverinfo: 'text'
+        })
+      }
+    })
+
+    // Selected words - High contrast highlight
     const selected = selectedWords.map(sw => embeddings.find(e => e.word === sw)).filter(Boolean) as WordEmbedding[]
     if (selected.length > 0) {
       traces.push({
         x: selected.map(e => e.x),
         y: selected.map(e => e.y),
         text: selected.map(e => `<b>${e.word}</b>`),
+        name: 'Selected',
         mode: 'markers+text',
         textposition: 'top center',
         type: 'scatter',
-        marker: { size: 14, color: '#a855f7', line: { color: 'white', width: 2 } },
+        marker: { 
+          size: 16, 
+          color: '#ef4444', 
+          line: { color: 'white', width: 3 },
+          shadow: { color: 'rgba(0,0,0,0.2)', blur: 5 }
+        },
         hoverinfo: 'text'
       })
     }

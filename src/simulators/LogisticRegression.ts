@@ -1,16 +1,16 @@
 
 /**
- * Logistic Regression Simulator Engine
+ * Logistic Regression Simulator Engine (General for Multi-Class)
  * 
- * Handles binary classification using the sigmoid function and binary cross-entropy loss.
- * Visualizes the decision boundary and probability heatmap.
+ * Supports Binary Classification (Sigmoid) and Multi-Class (Softmax).
+ * Uses Cross-Entropy Loss and Gradient Descent.
  */
 
 export interface LogisticRegressionParams {
-  w1: number
-  w2: number
-  bias: number
-  threshold: number
+  learningRate: number
+  numClasses: number
+  regularization: 'none' | 'l1' | 'l2'
+  regLambda: number
 }
 
 export interface LogisticRegressionState {
@@ -19,41 +19,59 @@ export interface LogisticRegressionState {
   accuracy: number
   iterations: number
   isConverged: boolean
+  weights: number[][] // [classIndex][featureIndex]
+  biases: number[]   // [classIndex]
   history: { iteration: number, loss: number, accuracy: number }[]
 }
 
 export interface ClassificationData {
   x1: number[]
   x2: number[]
-  y: number[] // 0 or 1
+  y: number[] // 0, 1, 2, ...
 }
 
 export class LogisticRegression {
-  private w1: number
-  private w2: number
-  private bias: number
+  private weights: number[][] = []
+  private biases: number[] = []
   private learningRate: number
-  private threshold: number
+  private numClasses: number
+  private regularization: 'none' | 'l1' | 'l2'
+  private regLambda: number
+  
   private x1: number[] = []
   private x2: number[] = []
   private y: number[] = []
   private iterationCount: number = 0
   private history: { iteration: number, loss: number, accuracy: number }[] = []
   private isConverged: boolean = false
-  private tolerance: number = 1e-5
+  private tolerance: number = 1e-6
 
-  constructor(initialParams: Partial<LogisticRegressionParams & { learningRate: number }> = {}) {
-    this.w1 = initialParams.w1 ?? Math.random() - 0.5
-    this.w2 = initialParams.w2 ?? Math.random() - 0.5
-    this.bias = initialParams.bias ?? 0
-    this.learningRate = initialParams.learningRate ?? 0.1
-    this.threshold = initialParams.threshold ?? 0.5
+  constructor(params: Partial<LogisticRegressionParams> = {}) {
+    this.numClasses = params.numClasses ?? 2
+    this.learningRate = params.learningRate ?? 0.1
+    this.regularization = params.regularization ?? 'none'
+    this.regLambda = params.regLambda ?? 0.01
+    this.initParams()
+  }
+
+  private initParams(): void {
+    this.weights = Array.from({ length: this.numClasses }, () => [
+      Math.random() * 0.1 - 0.05, 
+      Math.random() * 0.1 - 0.05
+    ])
+    this.biases = Array.from({ length: this.numClasses }, () => 0)
   }
 
   public setData(data: ClassificationData): void {
     this.x1 = data.x1
     this.x2 = data.x2
     this.y = data.y
+    // Re-init params if num classes changed in data
+    const maxClass = Math.max(...this.y, 0) + 1
+    if (maxClass > this.numClasses) {
+      this.numClasses = maxClass
+      this.initParams()
+    }
     this.reset()
   }
 
@@ -61,50 +79,51 @@ export class LogisticRegression {
     this.iterationCount = 0
     this.history = []
     this.isConverged = false
-    const initialMetrics = this.evaluate()
+    this.initParams()
+    const metrics = this.evaluate()
     this.history.push({ 
       iteration: 0, 
-      loss: initialMetrics.loss, 
-      accuracy: initialMetrics.accuracy 
+      loss: metrics.loss, 
+      accuracy: metrics.accuracy 
     })
   }
 
   public setParams(params: Partial<LogisticRegressionParams>): void {
-    if (params.w1 !== undefined) this.w1 = params.w1
-    if (params.w2 !== undefined) this.w2 = params.w2
-    if (params.bias !== undefined) this.bias = params.bias
-    if (params.threshold !== undefined) this.threshold = params.threshold
-  }
-
-  public getParams(): LogisticRegressionParams {
-    return { w1: this.w1, w2: this.w2, bias: this.bias, threshold: this.threshold }
-  }
-
-  /**
-   * Sigmoid activation function
-   */
-  private sigmoid(z: number): number {
-    return 1 / (1 + Math.exp(-z))
+    if (params.numClasses !== undefined && params.numClasses !== this.numClasses) {
+      this.numClasses = params.numClasses
+      this.initParams()
+    }
+    if (params.learningRate !== undefined) this.learningRate = params.learningRate
+    if (params.regularization !== undefined) this.regularization = params.regularization
+    if (params.regLambda !== undefined) this.regLambda = params.regLambda
   }
 
   /**
-   * Predict probability for a single point
+   * Softmax function
    */
-  public predictProb(x1: number, x2: number): number {
-    const z = this.w1 * x1 + this.w2 * x2 + this.bias
-    return this.sigmoid(z)
+  private softmax(scores: number[]): number[] {
+    const maxScore = Math.max(...scores)
+    const expScores = scores.map(s => Math.exp(s - maxScore))
+    const sumExp = expScores.reduce((a, b) => a + b, 0)
+    return expScores.map(s => s / sumExp)
   }
 
   /**
-   * Predict class for a single point
+   * Predict probabilities for all classes
    */
-  public predictClass(x1: number, x2: number): number {
-    return this.predictProb(x1, x2) >= this.threshold ? 1 : 0
+  public predictProbs(x1: number, x2: number): number[] {
+    const scores = this.weights.map((w, i) => w[0] * x1 + w[1] * x2 + this.biases[i])
+    return this.softmax(scores)
   }
 
   /**
-   * Evaluate model on current data
+   * Predict class (highest probability)
    */
+  public predict(x1: number, x2: number): number {
+    const probs = this.predictProbs(x1, x2)
+    return probs.indexOf(Math.max(...probs))
+  }
+
   public evaluate(): { loss: number, accuracy: number } {
     if (this.x1.length === 0) return { loss: 0, accuracy: 0 }
 
@@ -112,49 +131,72 @@ export class LogisticRegression {
     let correct = 0
 
     for (let i = 0; i < this.x1.length; i++) {
-      const prob = this.predictProb(this.x1[i], this.x2[i])
+      const probs = this.predictProbs(this.x1[i], this.x2[i])
       const target = this.y[i]
       
-      // Binary Cross Entropy Loss: -(y*log(p) + (1-y)*log(1-p))
-      // Adding epsilon to avoid log(0)
-      const eps = 1e-15
-      const p = Math.max(eps, Math.min(1 - eps, prob))
-      totalLoss -= (target * Math.log(p) + (1 - target) * Math.log(1 - p))
+      // Cross Entropy Loss: -log(p_target)
+      const p = Math.max(1e-15, probs[target])
+      totalLoss -= Math.log(p)
 
-      if ((prob >= this.threshold ? 1 : 0) === target) {
+      if (probs.indexOf(Math.max(...probs)) === target) {
         correct++
       }
     }
 
+    // Add Regularization Loss
+    let regLoss = 0
+    if (this.regularization === 'l2') {
+      this.weights.forEach(w => {
+        regLoss += (w[0] * w[0] + w[1] * w[1])
+      })
+      regLoss *= (0.5 * this.regLambda)
+    } else if (this.regularization === 'l1') {
+      this.weights.forEach(w => {
+        regLoss += (Math.abs(w[0]) + Math.abs(w[1]))
+      })
+      regLoss *= this.regLambda
+    }
+
     return {
-      loss: totalLoss / this.x1.length,
+      loss: (totalLoss / this.x1.length) + regLoss,
       accuracy: correct / this.x1.length
     }
   }
 
-  /**
-   * Perform one step of gradient descent
-   */
   public step(): LogisticRegressionState {
     if (this.isConverged || this.x1.length === 0) return this.getState()
 
-    let dw1 = 0
-    let dw2 = 0
-    let db = 0
+    const m = this.x1.length
+    const gradW = Array.from({ length: this.numClasses }, () => [0, 0])
+    const gradB = Array.from({ length: this.numClasses }, () => 0)
 
-    for (let i = 0; i < this.x1.length; i++) {
-      const prob = this.predictProb(this.x1[i], this.x2[i])
-      const error = prob - this.y[i]
-      
-      dw1 += error * this.x1[i]
-      dw2 += error * this.x2[i]
-      db += error
+    for (let i = 0; i < m; i++) {
+      const probs = this.predictProbs(this.x1[i], this.x2[i])
+      const target = this.y[i]
+
+      for (let c = 0; c < this.numClasses; c++) {
+        const error = probs[c] - (c === target ? 1 : 0)
+        gradW[c][0] += error * this.x1[i]
+        gradW[c][1] += error * this.x2[i]
+        gradB[c] += error
+      }
     }
 
-    const m = this.x1.length
-    this.w1 -= (this.learningRate * dw1) / m
-    this.w2 -= (this.learningRate * dw2) / m
-    this.bias -= (this.learningRate * db) / m
+    // Update weights and biases with regularization gradient
+    for (let c = 0; c < this.numClasses; c++) {
+      let regW0 = 0, regW1 = 0
+      if (this.regularization === 'l2') {
+        regW0 = this.regLambda * this.weights[c][0]
+        regW1 = this.regLambda * this.weights[c][1]
+      } else if (this.regularization === 'l1') {
+        regW0 = this.regLambda * Math.sign(this.weights[c][0])
+        regW1 = this.regLambda * Math.sign(this.weights[c][1])
+      }
+
+      this.weights[c][0] -= (this.learningRate * (gradW[c][0] / m + regW0))
+      this.weights[c][1] -= (this.learningRate * (gradW[c][1] / m + regW1))
+      this.biases[c] -= (this.learningRate * gradB[c] / m)
+    }
 
     this.iterationCount++
     const metrics = this.evaluate()
@@ -164,8 +206,7 @@ export class LogisticRegression {
       accuracy: metrics.accuracy
     })
 
-    // Check for convergence based on loss change
-    if (this.history.length > 1) {
+    if (this.history.length > 5) {
       const prevLoss = this.history[this.history.length - 2].loss
       if (Math.abs(prevLoss - metrics.loss) < this.tolerance) {
         this.isConverged = true
@@ -178,47 +219,25 @@ export class LogisticRegression {
   public getState(): LogisticRegressionState {
     const metrics = this.evaluate()
     return {
-      params: this.getParams(),
+      params: {
+        learningRate: this.learningRate,
+        numClasses: this.numClasses,
+        regularization: this.regularization,
+        regLambda: this.regLambda
+      },
       loss: metrics.loss,
       accuracy: metrics.accuracy,
       iterations: this.iterationCount,
       isConverged: this.isConverged,
+      weights: this.weights.map(w => [...w]),
+      biases: [...this.biases],
       history: [...this.history]
-    }
-  }
-
-  /**
-   * Calculate decision boundary points for plotting
-   * w1*x1 + w2*x2 + bias = logit(threshold)
-   * For threshold=0.5, logit=0, so w1*x1 + w2*x2 + bias = 0
-   * x2 = (-w1*x1 - bias) / w2
-   */
-  public getBoundaryLine(xRange: [number, number]): { x1: number[], x2: number[] } {
-    const logitThreshold = Math.log(this.threshold / (1 - this.threshold))
-    
-    // If w2 is near zero, the line is vertical
-    if (Math.abs(this.w2) < 1e-9) {
-      const x1_fixed = (logitThreshold - this.bias) / this.w1
-      return {
-        x1: [x1_fixed, x1_fixed],
-        x2: [-10, 10] // Large enough range
-      }
-    }
-
-    const x1_start = xRange[0]
-    const x1_end = xRange[1]
-    const x2_start = (logitThreshold - this.w1 * x1_start - this.bias) / this.w2
-    const x2_end = (logitThreshold - this.w1 * x1_end - this.bias) / this.w2
-
-    return {
-      x1: [x1_start, x1_end],
-      x2: [x2_start, x2_end]
     }
   }
 }
 
 /**
- * Data generation utility for classification
+ * Data generation utility (moved from old implementation)
  */
 export function generateClassificationData(
   n: number = 50, 

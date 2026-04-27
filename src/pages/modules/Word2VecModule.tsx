@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Card, Button, Navbar, Footer, BackButton, Quiz } from '@/components'
+import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import { Word2VecPlot } from '@/components/Word2VecPlot'
 import { Word2VecSimulator, Word2VecState } from '@/simulators/Word2Vec'
 
@@ -21,108 +21,150 @@ export const Word2VecModule: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <Navbar />
-      <BackButton />
-
-      <main className="pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 bg-purple-50 border border-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full mb-3">
-            🌌 NLP · Embeddings
+      <Sidebar />
+      <div className="lg:pl-72 pt-16">
+        <main className="p-6 lg:p-10 max-w-6xl mx-auto space-y-8">
+          <BackButton />
+          
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Word2Vec Simulator
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Understand semantic relationships through high-dimensional word embeddings
+            </p>
           </div>
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">Word2Vec</h1>
-          <p className="text-slate-500 text-lg max-w-2xl">
-            Word embeddings map words to high-dimensional vectors, capturing semantic meaning.
-            Select up to 3 words to see vector arithmetic in action!
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-4 space-y-5">
-            <Card title="Vocabulary">
-              <p className="text-sm text-slate-500 mb-4">Click words to select them. Select 3 to see the classic analogy calculation (e.g. King - Man + Woman = ?).</p>
-              <div className="flex flex-wrap gap-2">
-                {state.embeddings.map(e => {
-                  const isSelected = state.selectedWords.includes(e.word);
-                  return (
-                    <button
-                      key={e.word}
-                      onClick={() => toggleWord(e.word)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        isSelected 
-                        ? 'bg-purple-500 text-white shadow-md' 
-                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
-                      }`}
-                    >
-                      {e.word}
-                    </button>
-                  );
-                })}
+          {/* Top Explanation Card */}
+          <Card title="What is Word2Vec?" className="bg-purple-50 border-purple-200">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-2">How it Works</h3>
+                <p className="text-gray-700">
+                  Word2Vec is a technique to learn word embeddings by predicting a word from its context (CBOW) or vice versa (Skip-gram). It produces dense vectors where words with similar meanings are located closer together in space.
+                </p>
               </div>
-              
-              <div className="mt-6 pt-4 border-t border-slate-100">
-                <p className="text-sm font-bold text-slate-700 mb-2">Current Selection ({state.selectedWords.length}/3)</p>
-                <div className="flex gap-2 min-h-8">
-                  {state.selectedWords.map((w, i) => (
-                     <span key={w} className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-mono">
-                       {i === 0 ? '' : i === 1 ? '- ' : '+ '} {w}
-                     </span>
-                  ))}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-3 rounded border border-gray-200 text-center">
+                  <p className="text-sm text-gray-600">Dense Vectors</p>
+                  <p className="text-gray-800 font-bold">Fixed Dimension</p>
                 </div>
-                {state.selectedWords.length > 0 && (
-                  <Button onClick={clearSelection} variant="outline" size="sm" className="mt-4 w-full">Clear Selection</Button>
-                )}
+                <div className="bg-white p-3 rounded border border-gray-200 text-center">
+                  <p className="text-sm text-gray-600">Cos Similarity</p>
+                  <p className="text-gray-800 font-bold">Semantic Meaning</p>
+                </div>
+                <div className="bg-white p-3 rounded border border-gray-200 text-center">
+                  <p className="text-sm text-gray-600">Vector Math</p>
+                  <p className="text-gray-800 font-bold">Analogies</p>
+                </div>
               </div>
-            </Card>
+            </div>
+          </Card>
 
-            <Card title="How it works">
-               <ul className="text-sm text-slate-600 space-y-2">
-                 <li><strong>Embedding Space:</strong> Words with similar meanings are grouped closer together.</li>
-                 <li><strong>Vector Math:</strong> The relationship between words encodes concepts like gender or pluralization.</li>
-                 <li><strong>Example:</strong> The distance and direction from 'man' to 'king' is similar to 'woman' to 'queen'.</li>
-               </ul>
-            </Card>
-          </div>
-
-          <div className="lg:col-span-8 space-y-5">
-            <Card title="2D Embedding Space">
-              <Word2VecPlot embeddings={state.embeddings} selectedWords={state.selectedWords} height={480} />
-            </Card>
-
-            {!showQuiz ? (
-              <Card className="text-center py-6">
-                <h3 className="text-lg font-bold text-slate-800 mb-3">Check your knowledge</h3>
-                <Button onClick={() => setShowQuiz(true)}>Take Word2Vec Quiz</Button>
+          {/* Main Grid: Visualization + Controls */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Visualization - Left */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card title="2D Embedding Space Visualization" className="h-full">
+                <p className="text-sm text-slate-500 mb-4">
+                  High-dimensional word vectors projected into 2D using PCA/t-SNE. Similar words naturally group together.
+                </p>
+                <Word2VecPlot embeddings={state.embeddings} selectedWords={state.selectedWords} height={480} />
               </Card>
-            ) : (
-              <Quiz
-                title="Word2Vec Quiz"
-                questions={[
-                  {
-                    id: 'w2v-1',
-                    question: 'What is the primary output of Word2Vec?',
-                    options: ['A classification model', 'Dense vector embeddings for words', 'A syntax tree', 'Term frequency counts'],
-                    correct: 1,
-                    explanation: 'Word2Vec maps words to dense vectors (embeddings) where similar words have similar vectors.'
-                  },
-                  {
-                    id: 'w2v-2',
-                    question: 'How does Word2Vec learn embeddings?',
-                    options: ['By counting vowels', 'By predicting words based on their surrounding context', 'By checking a dictionary', 'By alphabetical order'],
-                    correct: 1,
-                    explanation: 'It uses shallow neural networks (CBOW or Skip-gram) to predict a word from its context, or vice versa.'
-                  },
-                  {
-                    id: 'w2v-3',
-                    question: 'What happens when you subtract the vector for "Man" from "King" and add "Woman"?',
-                    options: ['You get zero', 'The resulting vector is close to "Queen"', 'An error occurs', 'The vector magnitude doubles'],
-                    correct: 1,
-                    explanation: 'This famous vector arithmetic shows that Word2Vec captures semantic relationships like gender and royalty.'
-                  }
-                ]}
-              />
-            )}
+            </div>
+
+            {/* Controls - Right Side */}
+            <div className="space-y-6">
+              <Card title="Explore Vocabulary">
+                <p className="text-xs text-slate-500 mb-4 uppercase tracking-wider font-medium">Click words to select up to 3</p>
+                <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                  {state.embeddings.map(e => {
+                    const isSelected = state.selectedWords.includes(e.word);
+                    return (
+                      <button
+                        key={e.word}
+                        onClick={() => toggleWord(e.word)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                          isSelected 
+                          ? 'bg-purple-600 text-white shadow-md border-purple-600' 
+                          : 'bg-white border border-slate-200 text-slate-600 hover:border-purple-300'
+                        }`}
+                      >
+                        {e.word}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <div className="mt-6 pt-4 border-t border-slate-100">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Arithmetic Selection ({state.selectedWords.length}/3)</p>
+                  <div className="flex flex-wrap gap-2 min-h-[40px] items-center p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    {state.selectedWords.length === 0 && <span className="text-xs text-slate-400 italic">No words selected...</span>}
+                    {state.selectedWords.map((w, i) => (
+                       <span key={w} className="px-2 py-1 bg-white text-purple-700 border border-purple-100 rounded shadow-sm text-xs font-bold">
+                         {i === 0 ? '' : i === 1 ? '− ' : '+ '} {w}
+                       </span>
+                    ))}
+                  </div>
+                  {state.selectedWords.length > 0 && (
+                    <Button onClick={clearSelection} variant="outline" size="sm" className="mt-4 w-full">Reset Selection</Button>
+                  )}
+                </div>
+              </Card>
+
+              <Card title="Relationship Insights">
+                 <ul className="text-xs text-slate-600 space-y-3">
+                   <li className="flex gap-2">
+                     <span className="text-purple-500 font-bold">•</span>
+                     <span><strong>Semantic Proximity:</strong> Similar meanings = closer distance.</span>
+                   </li>
+                   <li className="flex gap-2">
+                     <span className="text-purple-500 font-bold">•</span>
+                     <span><strong>Vector Analogies:</strong> King - Man + Woman ≈ Queen.</span>
+                   </li>
+                 </ul>
+              </Card>
+
+              <div className="text-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-800 mb-2">Knowledge Check</h3>
+                <Button onClick={() => setShowQuiz(true)} variant="primary" className="w-full">Start Word2Vec Quiz</Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </main>
+
+          {showQuiz && (
+            <div className="mt-12">
+               <Quiz 
+                  title="Word2Vec Mastery Quiz"
+                  questions={[
+                    {
+                      id: 'w2v-1',
+                      question: 'What is the primary output of Word2Vec?',
+                      options: ['A classification model', 'Dense vector embeddings for words', 'A syntax tree', 'Term frequency counts'],
+                      correct: 1,
+                      explanation: 'Word2Vec maps words to dense vectors (embeddings) where similar words have similar vectors.'
+                    },
+                    {
+                      id: 'w2v-2',
+                      question: 'How does Word2Vec learn embeddings?',
+                      options: ['By counting vowels', 'By predicting words based on their surrounding context', 'By checking a dictionary', 'By alphabetical order'],
+                      correct: 1,
+                      explanation: 'It uses shallow neural networks (CBOW or Skip-gram) to predict a word from its context, or vice versa.'
+                    },
+                    {
+                      id: 'w2v-3',
+                      question: 'What happens when you subtract the vector for "Man" from "King" and add "Woman"?',
+                      options: ['You get zero', 'The resulting vector is close to "Queen"', 'An error occurs', 'The vector magnitude doubles'],
+                      correct: 1,
+                      explanation: 'This famous vector arithmetic shows that Word2Vec captures semantic relationships like gender and royalty.'
+                    }
+                  ]}
+                />
+            </div>
+          )}
+        </main>
+      </div>
       <Footer />
     </div>
   )

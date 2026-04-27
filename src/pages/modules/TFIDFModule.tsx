@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Card, Button, Navbar, Footer, BackButton, Quiz } from '@/components'
+import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import { TFIDFPlot } from '@/components/TFIDFPlot'
 import { TFIDF, TFIDFState } from '@/simulators/TFIDF'
 
@@ -32,90 +32,126 @@ export const TFIDFModule: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <Navbar />
-      <BackButton />
-
-      <main className="pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 bg-fuchsia-50 border border-fuchsia-100 text-fuchsia-700 text-xs font-bold px-3 py-1 rounded-full mb-3">
-            🔤 NLP · Text Processing
-          </div>
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">TF-IDF</h1>
-          <p className="text-slate-500 text-lg max-w-2xl">
-            Term Frequency-Inverse Document Frequency evaluates how important a word is to a document in a collection.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-4 space-y-5">
-            <Card title="Input Documents">
-              <div className="space-y-4">
-                <p className="text-sm text-slate-600">Enter documents (one per line):</p>
-                <textarea 
-                  className="w-full h-32 p-3 border border-slate-200 rounded-lg text-sm text-slate-700 font-mono"
-                  value={docsInput}
-                  onChange={(e) => setDocsInput(e.target.value)}
-                />
-                <Button onClick={handleApply} variant="primary" className="w-full">Process Documents</Button>
-              </div>
-            </Card>
-
-            <Card title="Vocabulary & IDF">
-              <div className="space-y-2 text-sm text-slate-600 max-h-64 overflow-y-auto pr-2">
-                {state.vocabulary.map((w, i) => (
-                  <div key={i} className="flex justify-between border-b border-slate-100 py-1">
-                    <span className="font-mono">{w}</span>
-                    <span className="text-slate-400">IDF: {state.idfVector[i].toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
+      <Sidebar />
+      <div className="lg:pl-72 pt-16">
+        <main className="p-6 lg:p-10 max-w-6xl mx-auto space-y-8">
+          <BackButton />
+          
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              TF-IDF Simulator
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Evaluate word importance using Term Frequency and Inverse Document Frequency
+            </p>
           </div>
 
-          <div className="lg:col-span-8 space-y-5">
-            <Card title="Vector Space Representation">
-              <p className="text-sm text-slate-500 mb-4">
-                Documents are projected into a pseudo-2D space based on their TF-IDF vectors.
-                Similar documents will cluster closer together.
-              </p>
-              <TFIDFPlot points={state.projectedPoints} height={400} />
-            </Card>
+          {/* Top Explanation Card */}
+          <Card title="What is TF-IDF?" className="bg-fuchsia-50 border-fuchsia-200">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-2">How it Works</h3>
+                <p className="text-gray-700">
+                  TF-IDF stands for Term Frequency-Inverse Document Frequency. It's a numerical statistic intended to reflect how important a word is to a document in a collection. It scales up rare words and scales down common words like "the" or "is".
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-3 rounded border border-gray-200 text-center">
+                  <p className="text-sm text-gray-600">TF (Term Freq)</p>
+                  <p className="text-gray-800 font-bold">Local Importance</p>
+                </div>
+                <div className="bg-white p-3 rounded border border-gray-200 text-center">
+                  <p className="text-sm text-gray-600">IDF (Inv Doc Freq)</p>
+                  <p className="text-gray-800 font-bold">Global Rarity</p>
+                </div>
+                <div className="bg-white p-3 rounded border border-gray-200 text-center">
+                  <p className="text-sm text-gray-600">TF × IDF</p>
+                  <p className="text-gray-800 font-bold">Final Weight</p>
+                </div>
+              </div>
+            </div>
+          </Card>
 
-            {!showQuiz ? (
-              <Card className="text-center py-6">
-                <h3 className="text-lg font-bold text-slate-800 mb-3">Test your understanding</h3>
-                <Button onClick={() => setShowQuiz(true)}>Take TF-IDF Quiz</Button>
+          {/* Main Grid: Visualization + Controls */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Visualization - Left */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card title="Vector Space Representation" className="h-full">
+                <p className="text-sm text-slate-500 mb-4">
+                  Documents are projected into a 2D space. Similar documents will appear closer together based on their TF-IDF profiles.
+                </p>
+                <TFIDFPlot points={state.projectedPoints} height={480} />
               </Card>
-            ) : (
-              <Quiz
-                title="TF-IDF Quiz"
-                questions={[
-                  {
-                    id: 'tfidf-1',
-                    question: 'What does TF stand for?',
-                    options: ['Total Frequency', 'Term Frequency', 'Text Format', 'Term Format'],
-                    correct: 1,
-                    explanation: 'TF stands for Term Frequency, which measures how often a word appears in a document.'
-                  },
-                  {
-                    id: 'tfidf-2',
-                    question: 'What is the purpose of IDF?',
-                    options: ['To penalize frequent words like "the"', 'To increase the weight of long documents', 'To count words', 'To translate text'],
-                    correct: 0,
-                    explanation: 'Inverse Document Frequency reduces the weight of words that appear in many documents, highlighting unique terms.'
-                  },
-                  {
-                    id: 'tfidf-3',
-                    question: 'If a word appears in every document in a large corpus, its IDF score will be:',
-                    options: ['Very high', 'Negative', 'Close to zero or very low', 'Undefined'],
-                    correct: 2,
-                    explanation: 'Words appearing everywhere have little discriminatory power, so their IDF is very low.'
-                  }
-                ]}
-              />
-            )}
+            </div>
+
+            {/* Controls - Right Side */}
+            <div className="space-y-6">
+              <Card title="Input Documents">
+                <div className="space-y-4">
+                  <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Enter text (One per line)</p>
+                  <textarea 
+                    className="w-full h-40 p-3 border border-slate-200 rounded-xl text-sm text-slate-700 font-mono focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all outline-none"
+                    value={docsInput}
+                    onChange={(e) => setDocsInput(e.target.value)}
+                  />
+                  <Button onClick={handleApply} variant="primary" className="w-full">Recompute TF-IDF</Button>
+                </div>
+              </Card>
+
+              <Card title="Vocabulary & IDF Scores">
+                <p className="text-xs text-slate-500 mb-3 uppercase tracking-wider font-medium">
+                  {state.vocabulary.length} Terms Found
+                </p>
+                <div className="space-y-2 text-sm text-slate-600 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                  {state.vocabulary.map((w, i) => (
+                    <div key={i} className="flex justify-between items-center border-b border-slate-100 py-2 hover:bg-slate-50 transition-colors px-1">
+                      <span className="font-mono text-xs">{w}</span>
+                      <span className="text-[10px] font-bold bg-fuchsia-100 text-fuchsia-700 px-2 py-0.5 rounded">IDF: {state.idfVector[i].toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              <div className="text-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-800 mb-2">Knowledge Check</h3>
+                <Button onClick={() => setShowQuiz(true)} variant="primary" className="w-full">Start TF-IDF Quiz</Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </main>
+
+          {showQuiz && (
+            <div className="mt-12">
+               <Quiz 
+                  title="TF-IDF Mastery Quiz"
+                  questions={[
+                    {
+                      id: 'tfidf-1',
+                      question: 'What does TF stand for?',
+                      options: ['Total Frequency', 'Term Frequency', 'Text Format', 'Term Format'],
+                      correct: 1,
+                      explanation: 'TF stands for Term Frequency, which measures how often a word appears in a document.'
+                    },
+                    {
+                      id: 'tfidf-2',
+                      question: 'What is the purpose of IDF?',
+                      options: ['To penalize frequent words like "the"', 'To increase the weight of long documents', 'To count words', 'To translate text'],
+                      correct: 0,
+                      explanation: 'Inverse Document Frequency reduces the weight of words that appear in many documents, highlighting unique terms.'
+                    },
+                    {
+                      id: 'tfidf-3',
+                      question: 'If a word appears in every document in a large corpus, its IDF score will be:',
+                      options: ['Very high', 'Negative', 'Close to zero or very low', 'Undefined'],
+                      correct: 2,
+                      explanation: 'Words appearing everywhere have little discriminatory power, so their IDF is very low.'
+                    }
+                  ]}
+                />
+            </div>
+          )}
+        </main>
+      </div>
       <Footer />
     </div>
   )
