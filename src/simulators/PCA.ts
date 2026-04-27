@@ -9,7 +9,7 @@ export interface PCAState {
 
 export class PCA {
   private data: number[][] = [];
-  private state: PCAState;
+  private state!: PCAState;
 
   constructor(initialData: number[][]) {
     this.setData(initialData);

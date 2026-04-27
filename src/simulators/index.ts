@@ -79,8 +79,11 @@ export type { HierarchicalState, LinkageMethod } from './HierarchicalClustering'
 
 // Boosting
 export { XGBoost } from './XGBoost'
+export type { XGBoostState } from './XGBoost'
 export { AdaBoost } from './AdaBoost'
+export type { AdaBoostState } from './AdaBoost'
 export { CatBoost } from './CatBoost'
+export type { CatBoostState } from './CatBoost'
 export type { BoostingState } from './shared/types'
 
 // PCA

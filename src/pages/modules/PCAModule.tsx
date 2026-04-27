@@ -5,7 +5,6 @@ import { PCA, PCAState, generatePCAData } from '@/simulators'
 
 export const PCAModule: React.FC = () => {
   const [datasetType, setDatasetType] = useState<'correlated' | 'blobs' | 'random'>('correlated')
-  const [numComponents, setNumComponents] = useState(2)
   const [showQuiz, setShowQuiz] = useState(false)
   
   // Initialize simulator
@@ -30,7 +29,7 @@ export const PCAModule: React.FC = () => {
     const el = document.getElementById('pca-plot')
     if (!el) return
 
-    const { originalData, projectedData, principalComponents, explainedVariance } = state
+    const { originalData, principalComponents } = state
 
     // Trace 1: Original Data
     const trace1 = {

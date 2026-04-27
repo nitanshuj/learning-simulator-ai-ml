@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react'
 import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import { ClassificationPlot } from '@/components/ClassificationPlot'
-import { AdaBoost, BoostingState, AdaBoostState } from '@/simulators'
+import { AdaBoost } from '@/simulators'
+import type { AdaBoostState } from '@/simulators'
 
 export const AdaBoostModule: React.FC = () => {
   const simulator = useMemo(() => new AdaBoost('moons', 10), [])

@@ -25,6 +25,7 @@ import { generateLinearDataset } from '@/simulators'
 export const LinearRegressionModule: React.FC = () => {
   const [simulator, setSimulator] = useState<LinearRegression | null>(null)
   const [state, setState] = useState<LinearRegressionState | null>(null)
+  const [trainData, setTrainData] = useState<{ x: number[], y: number[] } | null>(null)
   const [isRunning, setIsRunning] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
   const [learningRate, setLearningRate] = useState(0.01)
@@ -51,6 +52,7 @@ export const LinearRegressionModule: React.FC = () => {
     sim.setTestData(testData.x, testData.y)
 
     setSimulator(sim)
+    setTrainData({ x: data.x, y: data.y })
 
     // Set initial state
     const trainResults = sim.evaluateTrain()
@@ -227,6 +229,7 @@ export const LinearRegressionModule: React.FC = () => {
     simulator.setTrainData(data.x, data.y)
     const testData = generateLinearDataset(20, 2, 1, 0.8, -5, 5)
     simulator.setTestData(testData.x, testData.y)
+    setTrainData({ x: data.x, y: data.y })
     handleReset()
   }
 
@@ -255,11 +258,11 @@ export const LinearRegressionModule: React.FC = () => {
     )
   }
 
-  if (!simulator || !state) {
+  if (!simulator || !state || !trainData) {
     return <div className="text-center py-8">Loading simulator...</div>
   }
 
-  const { x, y } = simulator.getTrainData()
+  const { x, y } = trainData
   const predictions = simulator.predict(x)
 
   return (

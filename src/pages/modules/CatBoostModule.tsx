@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react'
 import { Card, Button, Navbar, Footer, BackButton, Quiz, Sidebar } from '@/components'
 import { ClassificationPlot } from '@/components/ClassificationPlot'
-import { CatBoost, BoostingState } from '@/simulators'
+import { CatBoost } from '@/simulators'
+import type { CatBoostState } from '@/simulators'
 
 export const CatBoostModule: React.FC = () => {
   const simulator = useMemo(() => new CatBoost('circles', 5), [])
