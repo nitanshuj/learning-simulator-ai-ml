@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
@@ -6,7 +5,7 @@ import { Footer } from '../components/Footer'
 import { ModelCard } from '../components/ModelCard'
 import { models } from '../data/models'
 
-export const HomePage: React.FC = () => {
+export const MLConceptsPage: React.FC = () => {
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = React.useState('All Models')
   const [searchQuery, setSearchQuery] = React.useState('')
@@ -33,9 +32,9 @@ export const HomePage: React.FC = () => {
     <div className="min-h-screen bg-[#fafbfc] font-sans">
       <Navbar />
       
-      <main>
+      <main className="pt-24">
         {/* Hero Section */}
-        <section className="pt-32 pb-16 relative overflow-hidden">
+        <section className="py-12 relative overflow-hidden">
           {/* Abstract Doodles */}
           <div className="absolute top-40 left-10 opacity-20 pointer-events-none">
             <svg width="120" height="120" viewBox="0 0 120 120" className="text-blue-600">
@@ -56,14 +55,14 @@ export const HomePage: React.FC = () => {
           </div>
 
           <div className="container-wide text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-800 mb-6 tracking-tight">
-              Learn Machine Learning <span className="font-hand text-blue-600 relative inline-block">Visually
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4 tracking-tight">
+              Machine Learning <span className="font-hand text-blue-600 relative inline-block">Concepts
                 <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 100 8" preserveAspectRatio="none">
                   <path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
             </h1>
-            <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
               Explore ML models with simple explanations and interactive simulations.
             </p>
 
@@ -79,21 +78,21 @@ export const HomePage: React.FC = () => {
                 placeholder="Search models or concepts..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-16 pl-14 pr-6 bg-white border border-slate-200 rounded-2xl text-lg shadow-sm group-hover:shadow-md focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:text-slate-300"
+                className="w-full h-14 pl-14 pr-6 bg-white border border-slate-200 rounded-2xl text-base shadow-sm group-hover:shadow-md focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:text-slate-300"
               />
             </div>
           </div>
         </section>
 
         {/* Filters */}
-        <section className="pb-12">
+        <section className="pb-8">
           <div className="container-wide">
             <div className="flex flex-wrap justify-center gap-2">
               {filters.map(filter => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                  className={`px-5 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                     activeFilter === filter 
                       ? 'bg-slate-900 text-white shadow-xl shadow-slate-200' 
                       : 'bg-white text-slate-500 border border-slate-100 hover:border-blue-200 hover:text-blue-600'
@@ -107,7 +106,7 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* Model Grid */}
-        <section className="pb-24">
+        <section className="pb-20">
           <div className="container-wide">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredModels.map(model => (
@@ -150,7 +149,7 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* Bottom Banner */}
-        <section className="container-wide mb-20">
+        <section className="container-wide mb-12">
           <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl flex items-center justify-center space-x-3 text-indigo-700">
             <span className="text-xl">🚀</span>
             <span className="font-bold text-sm">More models coming soon! Stay tuned and keep learning.</span>

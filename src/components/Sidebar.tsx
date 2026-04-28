@@ -18,7 +18,14 @@ export const Sidebar: React.FC = () => {
     'n-grams': '/n-grams',
     'decision-tree': '/decision-tree',
     'random-forest': '/random-forest',
-    // Coming soon ones for the list but no links yet or point to home
+    'svm': '/svm',
+    'knn': '/knn',
+    'naive-bayes': '/naive-bayes',
+    'hierarchical-clustering': '/hierarchical-clustering',
+    'xgboost': '/xgboost',
+    'adaboost': '/adaboost',
+    'catboost': '/catboost',
+    'pca': '/modules/pca',
   }
 
   return (

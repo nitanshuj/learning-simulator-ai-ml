@@ -1,5 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { HomePage } from '@/pages/HomePage'
+import { LetsLearnPage } from '@/pages/LetsLearnPage'
+import { MLConceptsPage } from '@/pages/MLConceptsPage'
+import { AIConceptsPage } from '@/pages/AIConceptsPage'
+import { ComingSoonPage } from '@/pages/ComingSoonPage'
+import { TransformersModule } from '@/pages/modules/TransformersModule'
 import {
   LinearRegressionModule,
   GradientDescentModule,
@@ -19,13 +23,22 @@ import {
   AdaBoostModule,
   CatBoostModule,
   PCAModule,
+  RAGModule,
 } from '@/pages/modules'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LetsLearnPage />} />
+        <Route path="/ml-concepts" element={<MLConceptsPage />} />
+        <Route path="/ai-concepts" element={<AIConceptsPage />} />
+        <Route path="/transformers" element={<TransformersModule />} />
+        <Route path="/rag" element={<RAGModule />} />
+        <Route path="/llms" element={<ComingSoonPage title="LLMs" />} />
+        <Route path="/roadmaps" element={<ComingSoonPage title="Roadmaps" />} />
+        <Route path="/resources" element={<ComingSoonPage title="Resources" />} />
+        <Route path="/about" element={<ComingSoonPage title="About Us" />} />
         <Route path="/linearregression" element={<LinearRegressionModule />} />
         <Route path="/gradientdescent" element={<GradientDescentModule />} />
         <Route path="/logisticregression" element={<LogisticRegressionModule />} />
