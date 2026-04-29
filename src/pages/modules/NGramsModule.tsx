@@ -10,6 +10,8 @@ function initSim(doc: string, n: number) {
 const DEFAULT_DOC = "the quick brown fox jumps over the lazy dog the quick brown fox";
 
 export const NGramsModule: React.FC = () => {
+  const [activeTab, setActiveTab] = React.useState<'visual' | 'theory'>('visual');
+
   const initial = useMemo(() => initSim(DEFAULT_DOC, 2), []);
   const [sim] = useState(initial.sim);
   const [state, setState] = useState<NGramsState>(initial.state);
@@ -33,7 +35,25 @@ export const NGramsModule: React.FC = () => {
         <main className="p-6 lg:p-10 max-w-6xl mx-auto space-y-8">
           <BackButton />
           
-          {/* Header */}
+          
+          {/* Tabs */}
+          <div className="flex border-b border-gray-200 mb-8 mt-4">
+            <button 
+              className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${activeTab === 'visual' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('visual')}
+            >
+              Visual Implementation
+            </button>
+            <button 
+              className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${activeTab === 'theory' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('theory')}
+            >
+              Theory & Notes
+            </button>
+          </div>
+
+          <div className={activeTab === 'visual' ? 'block space-y-8' : 'hidden'}>
+{/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
               N-Grams Simulator
@@ -208,6 +228,14 @@ export const NGramsModule: React.FC = () => {
                 />
             </div>
           )}
+          </div>
+          
+          <div className={activeTab === 'theory' ? 'block' : 'hidden'}>
+            <div className="bg-white p-12 rounded-3xl border border-gray-200 shadow-sm min-h-[400px] flex items-center justify-center">
+              <p className="text-gray-400 text-xl font-medium">Theory and Notes coming soon...</p>
+            </div>
+          </div>
+
         </main>
       </div>
       <Footer />

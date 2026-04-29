@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Navbar } from '../../components/Navbar'
-import { Footer } from '../../components/Footer'
+import { Navbar, Footer, BackButton, Sidebar } from '../../components'
+// @ts-ignore
+import transformersTheoryImg from '../../assets/images/Transformers Architecture - Advanced.png'
 
 interface TokenData {
   id: number
@@ -10,7 +11,7 @@ interface TokenData {
 
 export const TransformersModule: React.FC = () => {
   const [inputText, setInputText] = useState('I love AI and NLP')
-  const [activeTab, setActiveTab] = useState<'architecture' | 'attention' | 'positional'>('architecture')
+  const [activeTab, setActiveTab] = useState<'architecture' | 'attention' | 'positional' | 'theory'>('architecture')
   const [selectedBlock, setSelectedBlock] = useState<string | null>('Multi-Head Attention')
 
   // Attention sandbox states
@@ -69,10 +70,12 @@ export const TransformersModule: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <Navbar />
-
-      <main className="flex-grow pt-28 pb-16 container-wide">
+      <Sidebar />
+      <div className="lg:pl-72 pt-16">
+        <div className="max-w-6xl mx-auto space-y-8 p-6 lg:p-10">
+          <BackButton />
         <section className="mb-8">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-600 border border-purple-100 mb-3 animate-pulse">
             🤖 Advanced AI Visualization
@@ -86,38 +89,48 @@ export const TransformersModule: React.FC = () => {
         </section>
 
         {/* Tab Controls */}
-        <section className="flex border-b border-slate-200 mb-8 space-x-6">
+        <div className="flex border-b border-gray-200 mb-8 mt-4">
           <button
             onClick={() => setActiveTab('architecture')}
-            className={`pb-4 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
               activeTab === 'architecture'
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             📋 Architecture Flow
           </button>
           <button
             onClick={() => setActiveTab('attention')}
-            className={`pb-4 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
               activeTab === 'attention'
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             🔥 Attention Sandbox
           </button>
           <button
             onClick={() => setActiveTab('positional')}
-            className={`pb-4 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
               activeTab === 'positional'
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             🌊 Positional Encoding
           </button>
-        </section>
+          <button
+            onClick={() => setActiveTab('theory')}
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
+              activeTab === 'theory'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            📚 Theory & Notes
+          </button>
+        </div>
 
         {/* Tab content */}
         {activeTab === 'architecture' && (
@@ -442,50 +455,159 @@ export const TransformersModule: React.FC = () => {
         )}
 
         {activeTab === 'positional' && (
-          <div className="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm flex flex-col space-y-6">
-            <div>
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">
-                {"Positional Sine/Cosine Grid ($PE_{(pos, 2i)} = \\sin(pos/10000^{2i/d})$)"}
-              </span>
-              <p className="text-xs text-slate-400 mb-4">
-                Each token is injected with a persistent geometric coordinate sequence to determine absolute ordering.
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-100 p-8 shadow-sm flex flex-col space-y-6">
+              <div>
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                  {"Positional Sine/Cosine Grid ($PE_{(pos, 2i)} = \\sin(pos/10000^{2i/d})$)"}
+                </span>
+                <p className="text-xs text-slate-400 mb-4">
+                  Each token is injected with a persistent geometric coordinate sequence to determine absolute ordering.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {tokens.map((t) => {
+                  const pe = getPositionalEncoding(t.pos, 8)
+                  return (
+                    <div key={t.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200/50">
+                      <span className="text-sm font-bold text-slate-800">
+                        Token: <span className="text-blue-600 font-mono">{t.text}</span> (Pos: {t.pos})
+                      </span>
+                      <div className="flex gap-1 mt-3">
+                        {pe.map((val, idx) => {
+                          const height = Math.abs(val * 40)
+                          return (
+                            <div
+                              key={idx}
+                              className="flex-1 rounded-sm flex flex-col justify-end items-center"
+                              style={{ height: '50px' }}
+                            >
+                              <div
+                                className={`w-full rounded-xs ${val > 0 ? 'bg-indigo-500' : 'bg-rose-500'}`}
+                                style={{ height: `${height}px` }}
+                              />
+                              <span className="text-[8px] text-slate-400 mt-1 font-mono">{val.toFixed(1)}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tokens.map((t) => {
-                const pe = getPositionalEncoding(t.pos, 8)
-                return (
-                  <div key={t.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200/50">
-                    <span className="text-sm font-bold text-slate-800">
-                      Token: <span className="text-blue-600 font-mono">{t.text}</span> (Pos: {t.pos})
-                    </span>
-                    <div className="flex gap-1 mt-3">
-                      {pe.map((val, idx) => {
-                        const height = Math.abs(val * 40)
-                        return (
-                          <div
-                            key={idx}
-                            className="flex-1 rounded-sm flex flex-col justify-end items-center"
-                            style={{ height: '50px' }}
-                          >
-                            <div
-                              className={`w-full rounded-xs ${val > 0 ? 'bg-indigo-500' : 'bg-rose-500'}`}
-                              style={{ height: `${height}px` }}
-                            />
-                            <span className="text-[8px] text-slate-400 mt-1 font-mono">{val.toFixed(1)}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
+            {/* Block Inspector */}
+            <div className="bg-slate-900 text-slate-200 p-8 rounded-3xl flex flex-col justify-between shadow-xl h-[calc(100vh-140px)] max-h-[800px] sticky top-28">
+              <div>
+                <span className="text-[10px] font-black tracking-widest text-blue-400 uppercase">
+                  Block Inspector
+                </span>
+                <h3 className="text-xl font-bold text-white mt-2 mb-4">
+                  {selectedBlock || 'Select a block'}
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6">
+                  {architectureBlocks.find((b) => b.name === selectedBlock)?.desc ||
+                    'Click any block on the left diagram to view detailed structural explanations.'}
+                </p>
+              </div>
+
+              {selectedBlock && (
+                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700/50">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                    Internal Math:
+                  </span>
+                  <div className="text-xs font-mono text-blue-300 bg-slate-950 p-3 rounded mt-2 overflow-x-auto">
+                    {selectedBlock.includes('Attention')
+                      ? 'Attention(Q,K,V) = softmax(QK^T / √d_k)V'
+                      : 'FFN(x) = max(0, xW_1 + b_1)W_2 + b_2'}
                   </div>
-                )
-              })}
+                </div>
+              )}
             </div>
           </div>
         )}
-      </main>
 
+        {activeTab === 'theory' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 bg-white p-8 rounded-3xl border border-slate-100 shadow-sm min-h-[400px] flex flex-col">
+              <h2 className="text-3xl font-bold text-slate-800 mb-6">Transformer Architecture Theory</h2>
+              
+              <div className="mb-8">
+                <div className="overflow-hidden rounded-2xl border border-slate-200">
+                  <img 
+                    src={transformersTheoryImg} 
+                    alt="Transformers Architecture - Advanced" 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                <p className="text-center text-xs text-slate-400 mt-2 italic">
+                  Enhanced Image of Transfomers generated by Google Gemini
+                </p>
+              </div>
+
+              <div className="prose prose-slate max-w-none text-slate-600 space-y-6 text-base leading-relaxed">
+                <p>
+                  The <strong>Transformer architecture</strong>, introduced in the landmark 2017 paper <em>"Attention Is All You Need,"</em> completely revolutionized Natural Language Processing (NLP). Prior to Transformers, sequence-to-sequence models relied heavily on Recurrent Neural Networks (RNNs) and Long Short-Term Memory (LSTMs). The breakthrough of the Transformer was discarding recurrence entirely and relying solely on a mechanism called <strong>Self-Attention</strong>.
+                </p>
+                <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Core Components</h3>
+                <p>
+                  At a high level, the original Transformer consists of an <strong>Encoder</strong> and a <strong>Decoder</strong>:
+                </p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>
+                    <strong>Encoder:</strong> Reads the entire input sequence simultaneously. It uses <em>Multi-Head Self-Attention</em> to map dependencies between all words regardless of their positional distance. This allows the model to build a deeply contextualized representation of each token based on its surroundings.
+                  </li>
+                  <li>
+                    <strong>Decoder:</strong> Generates the output sequence one token at a time (auto-regressively). It uses <em>Masked Self-Attention</em> to ensure it cannot "cheat" by looking at future tokens, and a <em>Cross-Attention</em> layer to focus on relevant parts of the Encoder's contextualized output.
+                  </li>
+                </ul>
+
+                <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Positional Encoding</h3>
+                <p>
+                  Because Transformers process all tokens in parallel rather than sequentially, they inherently lack a sense of word order. To solve this, <strong>Positional Encodings</strong> (typically sine and cosine functions of different frequencies) are added directly to the input embeddings. This injects mathematical geometric coordinates into the tokens, allowing the model to distinguish between "The dog chased the cat" and "The cat chased the dog."
+                </p>
+
+                <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Why it Matters</h3>
+                <p>
+                  The lack of sequential dependencies means Transformers are highly parallelizable during training. This parallelization capability is the secret engine that paved the way for scaling models to massive datasets, directly enabling the era of Large Language Models (LLMs) such as GPT-4, BERT, and Claude.
+                </p>
+              </div>
+            </div>
+
+            {/* Block Inspector */}
+            <div className="bg-slate-900 text-slate-200 p-8 rounded-3xl flex flex-col justify-between shadow-xl h-[calc(100vh-140px)] max-h-[800px] sticky top-28">
+              <div>
+                <span className="text-[10px] font-black tracking-widest text-blue-400 uppercase">
+                  Block Inspector
+                </span>
+                <h3 className="text-xl font-bold text-white mt-2 mb-4">
+                  {selectedBlock || 'Select a block'}
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6">
+                  {architectureBlocks.find((b) => b.name === selectedBlock)?.desc ||
+                    'Click any block on the left diagram to view detailed structural explanations.'}
+                </p>
+              </div>
+
+              {selectedBlock && (
+                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700/50">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                    Internal Math:
+                  </span>
+                  <div className="text-xs font-mono text-blue-300 bg-slate-950 p-3 rounded mt-2 overflow-x-auto">
+                    {selectedBlock.includes('Attention')
+                      ? 'Attention(Q,K,V) = softmax(QK^T / √d_k)V'
+                      : 'FFN(x) = max(0, xW_1 + b_1)W_2 + b_2'}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        </div>
+      </div>
       <Footer />
     </div>
   )

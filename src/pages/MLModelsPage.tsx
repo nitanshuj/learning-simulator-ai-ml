@@ -5,7 +5,7 @@ import { Footer } from '../components/Footer'
 import { ModelCard } from '../components/ModelCard'
 import { models } from '../data/models'
 
-export const MLConceptsPage: React.FC = () => {
+export const MLModelsPage: React.FC = () => {
   const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = React.useState('All Models')
   const [searchQuery, setSearchQuery] = React.useState('')
@@ -56,7 +56,7 @@ export const MLConceptsPage: React.FC = () => {
 
           <div className="container-wide text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4 tracking-tight">
-              Machine Learning <span className="font-hand text-blue-600 relative inline-block">Concepts
+              Machine Learning <span className="font-hand text-blue-600 relative inline-block">Models
                 <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 100 8" preserveAspectRatio="none">
                   <path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="2" />
                 </svg>

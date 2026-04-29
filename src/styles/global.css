@@ -8,6 +8,7 @@
   body {
     @apply text-slate-800 bg-[#fafbfc];
     font-family: 'Quicksand', sans-serif;
+    overflow-y: scroll;
   }
 }
 

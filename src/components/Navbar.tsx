@@ -7,9 +7,9 @@ export const Navbar: React.FC = () => {
 
   const navItems = [
     { label: "Let's Learn", path: '/' },
-    { label: 'ML Concepts', path: '/ml-concepts' },
+    { label: 'Data Science Concepts', path: '/data-science-concepts' },
+    { label: 'ML Models', path: '/ml-models' },
     { label: 'AI Concepts', path: '/ai-concepts' },
-    { label: 'LLMs', path: '/llms' },
     { label: 'Roadmaps', path: '/roadmaps' },
     { label: 'Resources', path: '/resources' },
     { label: 'About', path: '/about' },

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Navbar } from '../../components/Navbar'
-import { Footer } from '../../components/Footer'
+import { Navbar, Footer, BackButton, Sidebar } from '../../components'
 
 interface NodeExplanation {
   title: string
@@ -9,7 +8,7 @@ interface NodeExplanation {
 }
 
 export const RAGModule: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'basic' | 'advanced'>('basic')
+  const [activeTab, setActiveTab] = useState<'basic' | 'advanced' | 'theory'>('basic')
   const [selectedNode, setSelectedNode] = useState<string | null>('Retrieval')
 
   const explanations: Record<string, NodeExplanation> = {
@@ -51,10 +50,13 @@ export const RAGModule: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <Navbar />
+      <Sidebar />
+      <div className="lg:pl-72 pt-16">
+        <div className="max-w-6xl mx-auto space-y-8 p-6 lg:p-10">
+          <BackButton />
 
-      <main className="flex-grow pt-28 pb-16 container-wide">
         <section className="mb-8">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-100 mb-3">
             📚 AI Engineering Simulator
@@ -68,29 +70,41 @@ export const RAGModule: React.FC = () => {
         </section>
 
         {/* Tab Controls */}
-        <section className="flex border-b border-slate-200 mb-8 space-x-6">
+        <div className="flex border-b border-gray-200 mb-8 mt-4">
           <button
             onClick={() => setActiveTab('basic')}
-            className={`pb-4 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
               activeTab === 'basic'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             📊 Basic RAG Flow
           </button>
           <button
             onClick={() => setActiveTab('advanced')}
-            className={`pb-4 text-sm font-bold border-b-2 transition-all ${
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
               activeTab === 'advanced'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
             🚀 Advanced Production RAG
           </button>
-        </section>
+          <button
+            onClick={() => setActiveTab('theory')}
+            className={`pb-4 px-6 font-medium text-lg border-b-2 transition-colors ${
+              activeTab === 'theory'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            📚 Theory & Notes
+          </button>
+        </div>
 
+        {activeTab !== 'theory' && (
+          <>
         {/* CSS Animation definitions */}
         <style>{`
           @keyframes flow {
@@ -685,7 +699,18 @@ export const RAGModule: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+        </>
+        )}
+
+        {activeTab === 'theory' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+            <div className="lg:col-span-2 bg-white p-12 rounded-3xl border border-slate-100 shadow-sm min-h-[400px] flex items-center justify-center">
+              <p className="text-slate-400 text-xl font-medium">Theory and Notes coming soon...</p>
+            </div>
+          </div>
+        )}
+        </div>
+      </div>
 
 
       <Footer />

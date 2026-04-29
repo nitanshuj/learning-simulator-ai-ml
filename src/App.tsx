@@ -1,8 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LetsLearnPage } from '@/pages/LetsLearnPage'
-import { MLConceptsPage } from '@/pages/MLConceptsPage'
+import { MLModelsPage } from '@/pages/MLModelsPage'
+import { DataScienceConceptsPage } from '@/pages/DataScienceConceptsPage'
+import { AboutPage } from '@/pages/AboutPage'
 import { AIConceptsPage } from '@/pages/AIConceptsPage'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
+import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
+import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
+import { CookiePolicyPage } from '@/pages/CookiePolicyPage'
 import { TransformersModule } from '@/pages/modules/TransformersModule'
 import {
   LinearRegressionModule,
@@ -31,14 +36,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LetsLearnPage />} />
-        <Route path="/ml-concepts" element={<MLConceptsPage />} />
+        <Route path="/data-science-concepts" element={<DataScienceConceptsPage />} />
+        <Route path="/ml-models" element={<MLModelsPage />} />
         <Route path="/ai-concepts" element={<AIConceptsPage />} />
         <Route path="/transformers" element={<TransformersModule />} />
         <Route path="/rag" element={<RAGModule />} />
-        <Route path="/llms" element={<ComingSoonPage title="LLMs" />} />
         <Route path="/roadmaps" element={<ComingSoonPage title="Roadmaps" />} />
         <Route path="/resources" element={<ComingSoonPage title="Resources" />} />
-        <Route path="/about" element={<ComingSoonPage title="About Us" />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/linearregression" element={<LinearRegressionModule />} />
         <Route path="/gradientdescent" element={<GradientDescentModule />} />
         <Route path="/logisticregression" element={<LogisticRegressionModule />} />
@@ -57,6 +62,9 @@ function App() {
         <Route path="/adaboost" element={<AdaBoostModule />} />
         <Route path="/catboost" element={<CatBoostModule />} />
         <Route path="/modules/pca" element={<PCAModule />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+        <Route path="/cookie-policy" element={<CookiePolicyPage />} />
       </Routes>
     </BrowserRouter>
   )
