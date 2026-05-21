@@ -19,3 +19,12 @@ export { AdaBoostModule } from './AdaBoostModule'
 export { CatBoostModule } from './CatBoostModule'
 export { PCAModule } from './PCAModule'
 export { RAGModule } from './RAGModule'
+export { TopicModuleFallback } from './TopicModuleFallback'
+export { MissingDataSimulator } from './MissingDataSimulator'
+export { ClassImbalanceSimulator } from './ClassImbalanceSimulator'
+export { TreeVsForestSimulator } from './TreeVsForestSimulator'
+export { EvalMetricsSimulator } from './EvalMetricsSimulator'
+export { PromptEngineeringSimulator } from './PromptEngineeringSimulator'
+export { DriftMonitoringSimulator } from './DriftMonitoringSimulator'
+
+

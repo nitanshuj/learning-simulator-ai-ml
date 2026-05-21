@@ -1,3 +1,18 @@
+export type TrackId =
+  | 'data-preparation'
+  | 'model-training'
+  | 'model-evaluation'
+  | 'text-and-nlp'
+  | 'llm-and-rag'
+  | 'deployment-and-monitoring'
+  | 'responsible-ai'
+
+export type PathId =
+  | 'beginner-ml'
+  | 'intermediate-ml'
+  | 'nlp-basics'
+  | 'genai-builder'
+  | 'production-ai'
 
 export type Category = 
   | 'Supervised Learning' 
@@ -7,6 +22,11 @@ export type Category =
   | 'Clustering' 
   | 'Dimensionality Reduction' 
   | 'NLP'
+  | 'Data Prep'
+  | 'Model Evaluation'
+  | 'LLM & RAG'
+  | 'Deployment'
+  | 'Responsible AI'
 
 export interface ModelData {
   id: string
@@ -20,9 +40,100 @@ export interface ModelData {
   color: string
   status: 'Active' | 'Coming Soon'
   featured?: boolean
+  track: TrackId
+  paths: PathId[]
+  prerequisites: string[]
+  nextTopics: string[]
+  isSimulator?: boolean
+  simulatorRoute?: string
 }
 
 export const models: ModelData[] = [
+  // --- Data Preparation Track ---
+  {
+    id: "data-cleaning",
+    title: "Data Cleaning",
+    description: "Learn to identify and handle duplicate entries, incorrect formats, and outliers in your data.",
+    categories: ["Data Prep"],
+    difficulty: "Beginner",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Outliers", "Formatting", "Duplicates", "Data Quality"],
+    icon: "🧹",
+    color: "blue",
+    status: "Active",
+    track: "data-preparation",
+    paths: ["beginner-ml"],
+    prerequisites: [],
+    nextTopics: ["missing-data"]
+  },
+  {
+    id: "missing-data",
+    title: "Missing Data",
+    description: "Handle missing values in patient records or transaction logs using imputation.",
+    categories: ["Data Prep"],
+    difficulty: "Beginner",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Imputation", "KNN Impute", "Mean/Median", "Missing Patterns"],
+    icon: "🧩",
+    color: "blue",
+    status: "Active",
+    track: "data-preparation",
+    paths: ["beginner-ml"],
+    prerequisites: ["data-cleaning"],
+    nextTopics: ["encoding"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/missing-data"
+  },
+  {
+    id: "encoding",
+    title: "Categorical Encoding",
+    description: "Convert text labels and categories into numerical formats that models can understand.",
+    categories: ["Data Prep"],
+    difficulty: "Beginner",
+    estimatedTime: "10 mins",
+    keyConcepts: ["One-Hot Encoding", "Label Encoding", "Target Encoding"],
+    icon: "🏷️",
+    color: "blue",
+    status: "Active",
+    track: "data-preparation",
+    paths: ["beginner-ml"],
+    prerequisites: ["missing-data"],
+    nextTopics: ["feature-scaling"]
+  },
+  {
+    id: "feature-scaling",
+    title: "Feature Scaling",
+    description: "Normalize features to ensure they contribute equally to distance calculations.",
+    categories: ["Data Prep"],
+    difficulty: "Beginner",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Standardization", "Min-Max Scaling", "Normalization"],
+    icon: "⚖️",
+    color: "blue",
+    status: "Active",
+    track: "data-preparation",
+    paths: ["beginner-ml"],
+    prerequisites: ["encoding"],
+    nextTopics: ["train-test-split"]
+  },
+  {
+    id: "train-test-split",
+    title: "Train/Test Split",
+    description: "Learn how splitting data avoids overfitting and enables honest performance evaluation.",
+    categories: ["Data Prep"],
+    difficulty: "Beginner",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Overfitting", "Generalization", "Test Set", "Data Leakage"],
+    icon: "✂️",
+    color: "blue",
+    status: "Active",
+    track: "data-preparation",
+    paths: ["beginner-ml"],
+    prerequisites: ["feature-scaling"],
+    nextTopics: ["linear-regression"]
+  },
+
+  // --- Model Training Track (Existing Models + Class Imbalance) ---
   {
     id: "linear-regression",
     title: "Linear Regression",
@@ -33,7 +144,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Loss Functions", "Gradient Descent", "Model Fitting", "Predictions"],
     icon: "📈",
     color: "blue",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: ["beginner-ml"],
+    prerequisites: ["train-test-split"],
+    nextTopics: ["logistic-regression"]
   },
   {
     id: "gradient-descent",
@@ -45,7 +160,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Gradients", "Learning Rate", "Convergence", "Optimization"],
     icon: "📉",
     color: "indigo",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: ["linear-regression"],
+    nextTopics: ["logistic-regression"]
   },
   {
     id: "logistic-regression",
@@ -57,7 +176,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Classification", "Sigmoid Function", "Decision Boundaries", "Probability"],
     icon: "🎯",
     color: "emerald",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: ["beginner-ml"],
+    prerequisites: ["linear-regression"],
+    nextTopics: ["eval-metrics"]
   },
   {
     id: "decision-tree",
@@ -69,7 +192,13 @@ export const models: ModelData[] = [
     keyConcepts: ["Entropy", "Information Gain", "Splits"],
     icon: "🌳",
     color: "emerald",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: ["intermediate-ml"],
+    prerequisites: ["logistic-regression"],
+    nextTopics: ["random-forest"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/tree-vs-forest"
   },
   {
     id: "random-forest",
@@ -81,7 +210,31 @@ export const models: ModelData[] = [
     keyConcepts: ["Ensemble", "Bagging", "Voters"],
     icon: "🌲",
     color: "emerald",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: ["intermediate-ml"],
+    prerequisites: ["decision-tree"],
+    nextTopics: ["class-imbalance"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/tree-vs-forest"
+  },
+  {
+    id: "class-imbalance",
+    title: "Class Imbalance",
+    description: "Handle fraud detection where 99% of transactions are legitimate.",
+    categories: ["Classification", "Supervised Learning"],
+    difficulty: "Intermediate",
+    estimatedTime: "15 mins",
+    keyConcepts: ["SMOTE", "Undersampling", "Recall Target", "Fraud Detection"],
+    icon: "⚖️",
+    color: "emerald",
+    status: "Active",
+    track: "model-training",
+    paths: ["intermediate-ml"],
+    prerequisites: ["random-forest"],
+    nextTopics: ["threshold-tuning"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/class-imbalance"
   },
   {
     id: "xgboost",
@@ -93,7 +246,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Boosting", "Regularization", "Trees"],
     icon: "🚀",
     color: "orange",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: ["intermediate-ml"],
+    prerequisites: ["random-forest"],
+    nextTopics: []
   },
   {
     id: "adaboost",
@@ -105,7 +262,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Weak Learners", "Weighting", "Ensemble"],
     icon: "📈",
     color: "red",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: ["random-forest"],
+    nextTopics: ["xgboost"]
   },
   {
     id: "catboost",
@@ -117,7 +278,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Categorical", "Symmetric Trees", "Ordered Boosting"],
     icon: "🐱",
     color: "purple",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: ["random-forest"],
+    nextTopics: ["xgboost"]
   },
   {
     id: "svm",
@@ -129,7 +294,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Hyperplanes", "Kernels", "Margins"],
     icon: "⚖️",
     color: "rose",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: ["logistic-regression"],
+    nextTopics: []
   },
   {
     id: "knn",
@@ -141,7 +310,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Neighbors", "K-Value", "Distance"],
     icon: "👥",
     color: "emerald",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: [],
+    nextTopics: []
   },
   {
     id: "naive-bayes",
@@ -153,7 +326,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Probability", "Bayes Theorem", "Prior"],
     icon: "🔔",
     color: "emerald",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: [],
+    nextTopics: []
   },
   {
     id: "kmeans-clustering",
@@ -165,7 +342,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Centroids", "Euclidean Distance", "Clusters"],
     icon: "🧩",
     color: "amber",
-    status: "Active"
+    status: "Active",
+    track: "model-training", // Stays in Model Training (as Unsupervised)
+    paths: [],
+    prerequisites: [],
+    nextTopics: ["hierarchical-clustering"]
   },
   {
     id: "hierarchical-clustering",
@@ -177,7 +358,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Dendrogram", "Agglomerative", "Divisive"],
     icon: "🪜",
     color: "amber",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: ["kmeans-clustering"],
+    nextTopics: []
   },
   {
     id: "pca",
@@ -189,8 +374,98 @@ export const models: ModelData[] = [
     keyConcepts: ["Eigenvectors", "Variance", "Components"],
     icon: "📉",
     color: "indigo",
-    status: "Active"
+    status: "Active",
+    track: "model-training",
+    paths: [],
+    prerequisites: [],
+    nextTopics: []
   },
+
+  // --- Model Evaluation Track ---
+  {
+    id: "eval-metrics",
+    title: "Evaluation Metrics",
+    description: "Tune decision thresholds and evaluate recall vs precision for medical screenings.",
+    categories: ["Model Evaluation"],
+    difficulty: "Beginner",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Precision", "Recall", "F1 Score", "Confusion Matrix"],
+    icon: "📊",
+    color: "emerald",
+    status: "Active",
+    track: "model-evaluation",
+    paths: ["beginner-ml"],
+    prerequisites: ["logistic-regression"],
+    nextTopics: ["cross-validation"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/eval-metrics"
+  },
+  {
+    id: "cross-validation",
+    title: "Cross-Validation",
+    description: "Implement K-Fold validation to guarantee model stability and test robustness.",
+    categories: ["Model Evaluation"],
+    difficulty: "Intermediate",
+    estimatedTime: "12 mins",
+    keyConcepts: ["K-Fold", "Validation Folds", "Variance Estimation"],
+    icon: "🔄",
+    color: "emerald",
+    status: "Active",
+    track: "model-evaluation",
+    paths: ["beginner-ml"],
+    prerequisites: ["eval-metrics"],
+    nextTopics: ["bias-variance"]
+  },
+  {
+    id: "threshold-tuning",
+    title: "Threshold Tuning",
+    description: "Optimize probability boundaries depending on the cost of false positives vs false negatives.",
+    categories: ["Model Evaluation"],
+    difficulty: "Intermediate",
+    estimatedTime: "12 mins",
+    keyConcepts: ["ROC-AUC", "F1 Optimization", "Decision Thresholds"],
+    icon: "🎛️",
+    color: "emerald",
+    status: "Active",
+    track: "model-evaluation",
+    paths: ["intermediate-ml"],
+    prerequisites: ["class-imbalance"],
+    nextTopics: ["bias-variance"]
+  },
+  {
+    id: "error-analysis",
+    title: "Error Analysis",
+    description: "Manually inspect misclassified samples to find patterns in model failure.",
+    categories: ["Model Evaluation"],
+    difficulty: "Intermediate",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Failure Modes", "Confusion Heatmap", "Sub-population Analysis"],
+    icon: "🔍",
+    color: "emerald",
+    status: "Active",
+    track: "model-evaluation",
+    paths: ["intermediate-ml"],
+    prerequisites: ["bias-variance"],
+    nextTopics: ["xgboost"]
+  },
+  {
+    id: "bias-variance",
+    title: "Bias-Variance Tradeoff",
+    description: "Balance model complexity to avoid both underfitting and overfitting.",
+    categories: ["Model Evaluation"],
+    difficulty: "Intermediate",
+    estimatedTime: "12 mins",
+    keyConcepts: ["Underfitting", "Overfitting", "Regularization", "Complexity Curve"],
+    icon: "🎯",
+    color: "emerald",
+    status: "Active",
+    track: "model-evaluation",
+    paths: ["beginner-ml", "intermediate-ml"],
+    prerequisites: ["cross-validation"],
+    nextTopics: ["error-analysis"]
+  },
+
+  // --- Text and NLP Track ---
   {
     id: "bag-of-words",
     title: "Bag-of-Words",
@@ -201,7 +476,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Corpus", "Vocabulary", "Word Counts", "Sparse Vectors"],
     icon: "🛍️",
     color: "sky",
-    status: "Active"
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: [],
+    nextTopics: ["tf-idf"]
   },
   {
     id: "tf-idf",
@@ -213,7 +492,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Term Frequency", "Inverse Document Frequency", "Vector Space", "Text Processing"],
     icon: "🔤",
     color: "fuchsia",
-    status: "Active"
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: ["bag-of-words"],
+    nextTopics: ["n-grams"]
   },
   {
     id: "n-grams",
@@ -225,7 +508,11 @@ export const models: ModelData[] = [
     keyConcepts: ["Unigrams", "Bigrams", "Trigrams", "Context Window"],
     icon: "🔗",
     color: "teal",
-    status: "Active"
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: ["tf-idf"],
+    nextTopics: ["word2vec"]
   },
   {
     id: "word2vec",
@@ -237,6 +524,390 @@ export const models: ModelData[] = [
     keyConcepts: ["Embeddings", "Skip-gram", "CBOW", "Cosine Similarity"],
     icon: "🌌",
     color: "purple",
-    status: "Active"
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: ["n-grams"],
+    nextTopics: ["tokenization"]
+  },
+  {
+    id: "tokenization",
+    title: "Tokenization",
+    description: "Learn how text is broken down into words, subwords, or characters before vectorization.",
+    categories: ["NLP"],
+    difficulty: "Beginner",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Byte-Pair Encoding", "WordPiece", "Vocabulary", "Subwords"],
+    icon: "✂️",
+    color: "sky",
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: ["word2vec"],
+    nextTopics: ["embeddings"]
+  },
+  {
+    id: "embeddings",
+    title: "Embeddings",
+    description: "Project words and sentences into high-dimensional vector spaces that capture semantic meaning.",
+    categories: ["NLP"],
+    difficulty: "Intermediate",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Semantic Space", "Dimensionality", "Vector math", "Similarity"],
+    icon: "🧲",
+    color: "sky",
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics", "genai-builder"],
+    prerequisites: ["tokenization"],
+    nextTopics: ["text-classification", "vector-databases"]
+  },
+  {
+    id: "text-classification",
+    title: "Text Classification",
+    description: "Classify text into sentiment, topics, or intent using vectors.",
+    categories: ["NLP"],
+    difficulty: "Beginner",
+    estimatedTime: "12 mins",
+    keyConcepts: ["Sentiment Analysis", "Spam Filtering", "Feature Vectors"],
+    icon: "🏷️",
+    color: "sky",
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: ["embeddings"],
+    nextTopics: ["similarity-search"]
+  },
+  {
+    id: "similarity-search",
+    title: "Similarity Search",
+    description: "Search for documents based on embedding distance rather than exact keyword matches.",
+    categories: ["NLP"],
+    difficulty: "Intermediate",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Cosine Distance", "L2 Distance", "Nearest Neighbors"],
+    icon: "🔍",
+    color: "sky",
+    status: "Active",
+    track: "text-and-nlp",
+    paths: ["nlp-basics"],
+    prerequisites: ["text-classification"],
+    nextTopics: ["transformers"]
+  },
+
+  // --- LLM and RAG Track ---
+  {
+    id: "transformers",
+    title: "Transformers",
+    description: "Demystify Self-Attention and multi-head attention blocks driving GenAI.",
+    categories: ["LLM & RAG"],
+    difficulty: "Advanced",
+    estimatedTime: "25 minutes",
+    keyConcepts: ["Self-Attention", "QKV Vectors", "Positional Encoding"],
+    icon: "⚡",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["similarity-search"],
+    nextTopics: ["llm-basics"]
+  },
+  {
+    id: "llm-basics",
+    title: "LLM Basics",
+    description: "Learn how autoregressive language models predict token-by-token.",
+    categories: ["LLM & RAG"],
+    difficulty: "Intermediate",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Autoregressive", "Next Token Prediction", "Temperature", "Top-p/Top-k"],
+    icon: "💬",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["transformers"],
+    nextTopics: ["prompt-engineering"]
+  },
+  {
+    id: "prompt-engineering",
+    title: "Prompt Engineering",
+    description: "Optimize instructions, few-shot examples, and templates for consistent LLM behavior.",
+    categories: ["LLM & RAG"],
+    difficulty: "Beginner",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Few-Shot", "Chain of Thought", "System Prompts", "Instruction Tuning"],
+    icon: "✍️",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["llm-basics"],
+    nextTopics: ["context-windows"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/prompt-engineering"
+  },
+  {
+    id: "context-windows",
+    title: "Context Windows",
+    description: "Understand the limits of context and how long prompts affect attention and costs.",
+    categories: ["LLM & RAG"],
+    difficulty: "Intermediate",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Context Limit", "Lost in the Middle", "Token Count", "Pricing"],
+    icon: "🖼️",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["prompt-engineering"],
+    nextTopics: ["vector-databases"]
+  },
+  {
+    id: "vector-databases",
+    title: "Vector Databases",
+    description: "Store and index dense embeddings for fast retrieval of millions of documents.",
+    categories: ["LLM & RAG"],
+    difficulty: "Intermediate",
+    estimatedTime: "15 mins",
+    keyConcepts: ["HNSW", "IVF-Flat", "Metadata Filtering", "Indexing"],
+    icon: "🗄️",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["embeddings", "context-windows"],
+    nextTopics: ["rag"]
+  },
+  {
+    id: "rag",
+    title: "RAG (Retrieval-Augmented)",
+    description: "Connect LLMs to external document sources to answer questions with live facts.",
+    categories: ["LLM & RAG"],
+    difficulty: "Intermediate",
+    estimatedTime: "25 minutes",
+    keyConcepts: ["Retriever", "Generator", "Groundedness", "Chunking"],
+    icon: "📚",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["vector-databases"],
+    nextTopics: ["hallucination-control"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/rag"
+  },
+  {
+    id: "hallucination-control",
+    title: "Hallucination Control",
+    description: "Verify LLM outputs against source documents using automatic metrics.",
+    categories: ["LLM & RAG"],
+    difficulty: "Advanced",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Faithfulness", "Self-Consistency", "Grounding Checks"],
+    icon: "🛡️",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["rag"],
+    nextTopics: ["agents"]
+  },
+  {
+    id: "chunking",
+    title: "Data Chunking",
+    description: "Optimize window size and overlap to capture local text relationships.",
+    categories: ["LLM & RAG"],
+    difficulty: "Intermediate",
+    estimatedTime: "12 mins",
+    keyConcepts: ["Sliding Window", "Semantic Chunking", "Overlap Size"],
+    icon: "🧩",
+    color: "amber",
+    status: "Coming Soon",
+    track: "llm-and-rag",
+    paths: [],
+    prerequisites: ["vector-databases"],
+    nextTopics: []
+  },
+  {
+    id: "retrieval-quality",
+    title: "Retrieval Quality",
+    description: "Measure search quality using mean reciprocal rank and normalized discounted cumulative gain.",
+    categories: ["LLM & RAG"],
+    difficulty: "Advanced",
+    estimatedTime: "15 mins",
+    keyConcepts: ["MRR", "NDCG", "Precision@K", "Re-ranking"],
+    icon: "🎯",
+    color: "amber",
+    status: "Coming Soon",
+    track: "llm-and-rag",
+    paths: [],
+    prerequisites: ["rag"],
+    nextTopics: []
+  },
+  {
+    id: "agents",
+    title: "AI Agents",
+    description: "Structure LLMs that can invoke tools, make sequential decisions, and use memory.",
+    categories: ["LLM & RAG"],
+    difficulty: "Advanced",
+    estimatedTime: "20 mins",
+    keyConcepts: ["ReAct", "Tool Call", "Execution Loop", "Memory Logs"],
+    icon: "🕵️",
+    color: "amber",
+    status: "Active",
+    track: "llm-and-rag",
+    paths: ["genai-builder"],
+    prerequisites: ["hallucination-control"],
+    nextTopics: ["bias-fairness"]
+  },
+
+  // --- Deployment & Monitoring Track ---
+  {
+    id: "deployment-basics",
+    title: "Deployment Basics",
+    description: "Learn how to wrap models in APIs (like Flask/FastAPI) and serve them using Docker.",
+    categories: ["Deployment"],
+    difficulty: "Intermediate",
+    estimatedTime: "15 mins",
+    keyConcepts: ["FastAPI", "Docker", "REST API", "Serialization"],
+    icon: "📦",
+    color: "rose",
+    status: "Active",
+    track: "deployment-and-monitoring",
+    paths: ["production-ai"],
+    prerequisites: ["xgboost"],
+    nextTopics: ["inference-patterns"]
+  },
+  {
+    id: "inference-patterns",
+    title: "Inference Patterns",
+    description: "Choose between real-time inference, batch prediction, and streaming predictions.",
+    categories: ["Deployment"],
+    difficulty: "Intermediate",
+    estimatedTime: "12 mins",
+    keyConcepts: ["Batch Inference", "Streaming", "Latency vs Throughput"],
+    icon: "⚡",
+    color: "rose",
+    status: "Active",
+    track: "deployment-and-monitoring",
+    paths: ["production-ai"],
+    prerequisites: ["deployment-basics"],
+    nextTopics: ["drift-monitoring"]
+  },
+  {
+    id: "drift-monitoring",
+    title: "Drift Monitoring",
+    description: "Simulate changing user traffic over time to detect feature drift and performance drops.",
+    categories: ["Deployment"],
+    difficulty: "Intermediate",
+    estimatedTime: "20 mins",
+    keyConcepts: ["Covariate Shift", "PSI Index", "Concept Drift", "Alerting"],
+    icon: "📡",
+    color: "rose",
+    status: "Active",
+    track: "deployment-and-monitoring",
+    paths: ["production-ai"],
+    prerequisites: ["inference-patterns"],
+    nextTopics: ["retraining-triggers"],
+    isSimulator: true,
+    simulatorRoute: "/simulators/drift-monitoring"
+  },
+  {
+    id: "retraining-triggers",
+    title: "Retraining Triggers",
+    description: "Set up automated pipelines that trigger retraining based on drift alerts or schedules.",
+    categories: ["Deployment"],
+    difficulty: "Intermediate",
+    estimatedTime: "10 mins",
+    keyConcepts: ["Auto-retrain", "Model Registry", "Shadow Deployments"],
+    icon: "🔄",
+    color: "rose",
+    status: "Active",
+    track: "deployment-and-monitoring",
+    paths: ["production-ai"],
+    prerequisites: ["drift-monitoring"],
+    nextTopics: ["ab-testing"]
+  },
+  {
+    id: "ab-testing",
+    title: "A/B Testing Models",
+    description: "Route user traffic between A and B models to prove business benefit statistically.",
+    categories: ["Deployment"],
+    difficulty: "Advanced",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Traffic Split", "P-Value", "Statistical Power", "Canary Deploy"],
+    icon: "🧪",
+    color: "rose",
+    status: "Active",
+    track: "deployment-and-monitoring",
+    paths: ["production-ai"],
+    prerequisites: ["retraining-triggers"],
+    nextTopics: ["failure-handling"]
+  },
+  {
+    id: "failure-handling",
+    title: "Failure Handling",
+    description: "Implement fallbacks, caching, and rate-limiting to build robust model APIs.",
+    categories: ["Deployment"],
+    difficulty: "Advanced",
+    estimatedTime: "12 mins",
+    keyConcepts: ["Fallback Model", "Circuit Breakers", "Graceful Degradation"],
+    icon: "🛡️",
+    color: "rose",
+    status: "Active",
+    track: "deployment-and-monitoring",
+    paths: ["production-ai"],
+    prerequisites: ["ab-testing"],
+    nextTopics: ["bias-fairness"]
+  },
+
+  // --- Responsible AI Track ---
+  {
+    id: "bias-fairness",
+    title: "Bias & Fairness",
+    description: "Measure model predictions across subgroups to identify and mitigate discrimination.",
+    categories: ["Responsible AI"],
+    difficulty: "Intermediate",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Demographic Parity", "Equal Opportunity", "Bias Mitigation"],
+    icon: "⚖️",
+    color: "teal",
+    status: "Active",
+    track: "responsible-ai",
+    paths: ["genai-builder", "production-ai"],
+    prerequisites: ["failure-handling"],
+    nextTopics: ["privacy"]
+  },
+  {
+    id: "privacy",
+    title: "Privacy in AI",
+    description: "Understand Differential Privacy and federated learning to secure user datasets.",
+    categories: ["Responsible AI"],
+    difficulty: "Advanced",
+    estimatedTime: "15 mins",
+    keyConcepts: ["Differential Privacy", "Federated Learning", "Anonymization"],
+    icon: "🔒",
+    color: "teal",
+    status: "Coming Soon",
+    track: "responsible-ai",
+    paths: [],
+    prerequisites: ["bias-fairness"],
+    nextTopics: ["safety"]
+  },
+  {
+    id: "safety",
+    title: "AI Safety & Alignment",
+    description: "Implement guardrails, toxicity filters, and reinforcement learning alignment.",
+    categories: ["Responsible AI"],
+    difficulty: "Advanced",
+    estimatedTime: "15 mins",
+    keyConcepts: ["RLHF", "Toxicity Classifiers", "Prompt Injection Defense"],
+    icon: "🛡️",
+    color: "teal",
+    status: "Coming Soon",
+    track: "responsible-ai",
+    paths: [],
+    prerequisites: ["privacy"],
+    nextTopics: []
   }
 ]

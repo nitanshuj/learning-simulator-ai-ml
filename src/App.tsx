@@ -29,7 +29,21 @@ import {
   CatBoostModule,
   PCAModule,
   RAGModule,
+  TopicModuleFallback,
+  MissingDataSimulator,
+  ClassImbalanceSimulator,
+  TreeVsForestSimulator,
+  EvalMetricsSimulator,
+  PromptEngineeringSimulator,
+  DriftMonitoringSimulator,
 } from '@/pages/modules'
+
+import { TracksPage } from '@/pages/TracksPage'
+import { TrackDetailPage } from '@/pages/TrackDetailPage'
+import { LearningPathsPage } from '@/pages/LearningPathsPage'
+import { PathDetailPage } from '@/pages/PathDetailPage'
+import { SimulatorsPage } from '@/pages/SimulatorsPage'
+
 
 function App() {
   return (
@@ -39,6 +53,25 @@ function App() {
         <Route path="/data-science-concepts" element={<DataScienceConceptsPage />} />
         <Route path="/ml-models" element={<MLModelsPage />} />
         <Route path="/ai-concepts" element={<AIConceptsPage />} />
+        
+        {/* New Structured Tracks, Paths, and Simulators */}
+        <Route path="/tracks" element={<TracksPage />} />
+        <Route path="/tracks/:trackId" element={<TrackDetailPage />} />
+        <Route path="/learning-paths" element={<LearningPathsPage />} />
+        <Route path="/learning-paths/:pathId" element={<PathDetailPage />} />
+        <Route path="/simulators" element={<SimulatorsPage />} />
+
+        {/* Simulators */}
+        <Route path="/simulators/missing-data" element={<MissingDataSimulator />} />
+        <Route path="/simulators/class-imbalance" element={<ClassImbalanceSimulator />} />
+        <Route path="/simulators/tree-vs-forest" element={<TreeVsForestSimulator />} />
+        <Route path="/simulators/eval-metrics" element={<EvalMetricsSimulator />} />
+        <Route path="/simulators/prompt-engineering" element={<PromptEngineeringSimulator />} />
+        <Route path="/simulators/drift-monitoring" element={<DriftMonitoringSimulator />} />
+
+        {/* Dynamic Fallback Topic Route */}
+        <Route path="/modules/:topicId" element={<TopicModuleFallback />} />
+
         <Route path="/transformers" element={<TransformersModule />} />
         <Route path="/rag" element={<RAGModule />} />
         <Route path="/roadmaps" element={<ComingSoonPage title="Roadmaps" />} />
@@ -65,6 +98,7 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+
       </Routes>
     </BrowserRouter>
   )

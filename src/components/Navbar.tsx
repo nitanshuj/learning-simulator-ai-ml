@@ -6,14 +6,12 @@ export const Navbar: React.FC = () => {
   const location = useLocation()
 
   const navItems = [
-    { label: "Let's Learn", path: '/' },
-    { label: 'Data Science Concepts', path: '/data-science-concepts' },
-    { label: 'ML Models', path: '/ml-models' },
-    { label: 'AI Concepts', path: '/ai-concepts' },
-    { label: 'Roadmaps', path: '/roadmaps' },
-    { label: 'Resources', path: '/resources' },
+    { label: 'Learning Tracks', path: '/tracks' },
+    { label: 'Guided Paths', path: '/learning-paths' },
+    { label: 'Scenario Playgrounds', path: '/simulators' },
     { label: 'About', path: '/about' },
   ]
+
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-divider">

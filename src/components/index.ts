@@ -31,3 +31,7 @@ export { Footer } from './Footer'
 export { BackButton } from './BackButton'
 export { TreeVisualizer } from './TreeVisualizer'
 export { Sidebar } from './Sidebar'
+export { TopicHeader } from './TopicHeader'
+export { NextTopicBar } from './NextTopicBar'
+export { SimulatorShell } from './SimulatorShell'
+
