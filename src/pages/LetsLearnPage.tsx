@@ -4,6 +4,7 @@ import { Navbar } from '../components/Navbar'
 import { Footer } from '../components/Footer'
 import { tracks } from '@/data/tracks'
 import { learningPaths } from '@/data/learningPaths'
+import { roadmaps } from '@/data/roadmaps'
 
 export const LetsLearnPage: React.FC = () => {
   const navigate = useNavigate()
@@ -137,6 +138,14 @@ export const LetsLearnPage: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button
+                onClick={() => navigate('/roadmaps')}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-base font-bold shadow-xl shadow-blue-500/20 hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2"
+              >
+                <span>Role Roadmaps</span>
+                <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-black">New</span>
+              </button>
+
+              <button
                 onClick={() => navigate('/tracks')}
                 className="px-8 py-4 bg-slate-900 text-white rounded-2xl text-base font-bold shadow-xl shadow-slate-200 hover:bg-slate-800 hover:shadow-slate-300 transform hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2"
               >
@@ -256,6 +265,66 @@ export const LetsLearnPage: React.FC = () => {
                 ))}
               </div>
 
+            </div>
+          </div>
+        </section>
+
+        {/* Industry Role Roadmaps Section */}
+        <section className="py-20 bg-slate-50/50 border-t border-slate-100">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+              <div>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-blue-50 text-blue-600 uppercase tracking-wider mb-2">
+                  🗺️ Career Blueprints
+                </span>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight">
+                  Industry Role Roadmaps
+                </h2>
+                <p className="text-slate-500 font-medium text-sm md:text-base mt-1">
+                  Targeted skill checklists, milestones, and hands-on tracks for today's AI & ML careers.
+                </p>
+              </div>
+              <Link
+                to="/roadmaps"
+                className="inline-flex items-center text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors space-x-1 shrink-0"
+              >
+                <span>Explore all 4 roadmaps</span>
+                <span>→</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {roadmaps.map((r) => (
+                <div
+                  key={r.id}
+                  onClick={() => navigate(`/roadmaps/${r.id}`)}
+                  className="group bg-white border-2 border-slate-200 hover:border-slate-900 p-7 rounded-none shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden"
+                >
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${r.gradient}`} />
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-3xl bg-slate-50 p-2.5 rounded-none group-hover:scale-105 transition-transform border border-slate-200">
+                        {r.icon}
+                      </span>
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white px-2.5 py-1 rounded-none">
+                        {r.estimatedMonths}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-1">
+                        {r.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium">
+                        {r.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="pt-4 mt-4 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-slate-700 group-hover:text-blue-600 transition-colors uppercase tracking-wider">
+                    <span>View Roadmap</span>
+                    <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>

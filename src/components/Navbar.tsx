@@ -9,6 +9,7 @@ export const Navbar: React.FC = () => {
     { label: 'Learning Tracks', path: '/tracks' },
     { label: 'Guided Paths', path: '/learning-paths' },
     { label: 'Scenario Playgrounds', path: '/simulators' },
+    { label: 'Roadmaps', path: '/roadmaps' },
     { label: 'About', path: '/about' },
   ]
 
@@ -40,7 +41,7 @@ export const Navbar: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-lg">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.path
+              const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path))
               return (
                 <Link
                   key={item.path}
@@ -79,7 +80,7 @@ export const Navbar: React.FC = () => {
         <div className="md:hidden bg-white border-t border-divider animate-fadeIn">
           <div className="px-lg pt-sm pb-xl space-y-sm">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.path
+              const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path))
               return (
                 <Link
                   key={item.path}

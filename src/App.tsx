@@ -43,6 +43,8 @@ import { TrackDetailPage } from '@/pages/TrackDetailPage'
 import { LearningPathsPage } from '@/pages/LearningPathsPage'
 import { PathDetailPage } from '@/pages/PathDetailPage'
 import { SimulatorsPage } from '@/pages/SimulatorsPage'
+import { RoadmapsPage } from '@/pages/RoadmapsPage'
+import { RoadmapDetailPage } from '@/pages/RoadmapDetailPage'
 
 
 function App() {
@@ -61,6 +63,10 @@ function App() {
         <Route path="/learning-paths/:pathId" element={<PathDetailPage />} />
         <Route path="/simulators" element={<SimulatorsPage />} />
 
+        {/* Roadmaps */}
+        <Route path="/roadmaps" element={<RoadmapsPage />} />
+        <Route path="/roadmaps/:roadmapId" element={<RoadmapDetailPage />} />
+
         {/* Simulators */}
         <Route path="/simulators/missing-data" element={<MissingDataSimulator />} />
         <Route path="/simulators/class-imbalance" element={<ClassImbalanceSimulator />} />
@@ -74,7 +80,6 @@ function App() {
 
         <Route path="/transformers" element={<TransformersModule />} />
         <Route path="/rag" element={<RAGModule />} />
-        <Route path="/roadmaps" element={<ComingSoonPage title="Roadmaps" />} />
         <Route path="/resources" element={<ComingSoonPage title="Resources" />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/linearregression" element={<LinearRegressionModule />} />
